@@ -4,13 +4,17 @@ scarlet
 A server in ruby.
 
 ## How to use
-''''bash
+```sh
   $ ruby server.rb {[[conf.json],[folder_with_html,port]]}
+```
 Example:
-
+```sh
   $ ruby server.rb conf.json
+```
 Or
+```sh
   $ ruby server.rb "./public" 8888
+```
 
 ## IDE and basic configurations
 * Development setup for MAC OSX: http://www.createdbypete.com/articles/ruby-on-rails-development-setup-for-mac-osx
