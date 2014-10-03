@@ -4,9 +4,7 @@
     "root_page": "index.html",
     //	Files will be served from this directory
     "web_root" : "./public",
-    /*
-    	Map extensions to their content type
-    */
+    //	Map extensions to their content type
     "content_type_mapping" : {
 		"html" : "text/html",
 		"txt" : "text/plain",
