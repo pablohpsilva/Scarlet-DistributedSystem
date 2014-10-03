@@ -10,8 +10,11 @@ else
 		'domain'   => 'localhost',
 		'port'     => '8888',
 		'root_page'=> 'index.html',
+		# Files will be served from this directory
 		'web_root' => './public',
+		# Treat as binary data if content type cannot be found
 		'default_content_type' => 'application/octet-stream',
+		# Map extensions to their content type
 		'content_type_mapping' => {
 			'html' => 'text/html',
 			'txt'  => 'text/plain',

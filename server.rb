@@ -4,28 +4,6 @@ require 'uri'
 # Load server configurations
 load 'serv.conf.rb'
 
-
-# Files will be served from this directory
-# WEB_ROOT = './public'
-
-# This file will contain the server configurations.
-# CONFIG   = 'conf.json'
-
-# Map extensions to their content type
-# Works just like a dictionary~PHP
-# CONTENT_TYPE_MAPPING = {
-#   'html' => 'text/html',
-#   'txt' => 'text/plain',
-#   'png' => 'image/png',
-#   'jpg' => 'image/jpeg'
-# }
-
-# Treat as binary data if content type cannot be found
-#DEFAULT_CONTENT_TYPE = 'application/octet-stream'
-
-# This helper function parses the extension of the
-# requested file and then looks up its content type.
-
 def content_type(path)
   ext = File.extname(path).split(".").last
   SERV_CONFIG['content_type_mapping'].fetch(ext, SERV_CONFIG['default_content_type'])
