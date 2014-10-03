@@ -1,8 +1,11 @@
 require 'json'
 
+#CONF = 'conf.json'
+#CONF = 'NOT_HERE.json'
+
 # Load a JSON configuration file and use it to manage the server
-if File.exist?('conf.json')
-	file = File.read('conf.json')
+if File.exist?(CONF)
+	file = File.read(CONF)
 	SERV_CONFIG = JSON.parse(file)
 	puts "conf.json loaded successfully"
 else

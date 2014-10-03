@@ -3,6 +3,15 @@ scarlet
 
 A server in ruby.
 
+## How to use
+''''bash
+  $ ruby server.rb {[[conf.json],[folder_with_html,port]]}
+Example:
+
+  $ ruby server.rb conf.json
+Or
+  $ ruby server.rb "./public" 8888
+
 ## IDE and basic configurations
 * Development setup for MAC OSX: http://www.createdbypete.com/articles/ruby-on-rails-development-setup-for-mac-osx
 * Ruby and Sublime Text: http://zhuravel.biz/setting-up-sublime-text-for-ruby-development
@@ -15,3 +24,4 @@ A server in ruby.
 
 ## Server skills
 * Ruby sockets: https://practicingruby.com/articles/implementing-an-http-file-server
+* Ruby Socket Class: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/socket/rdoc/Socket.html

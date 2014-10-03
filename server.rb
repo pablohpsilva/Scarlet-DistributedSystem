@@ -1,8 +1,35 @@
 require 'socket'
 require 'uri'
+require 'json'
 
-# Load server configurations
-load 'serv.conf.rb'
+def server_conf_file(jsonfile)
+  if File.exist?(jsonfile)
+    file = File.read(jsonfile)
+    conf = JSON.parse(file)
+    puts "JSON Configuration file loaded successfully"
+    return conf
+  end
+end
+
+def server_conf(folder,port)
+  conf = {
+    'domain'   => 'localhost',
+    'port'     => port,
+    'root_page'=> 'index.html',
+    # Files will be served from this directory
+    'web_root' => folder,
+    # Treat as binary data if content type cannot be found
+    'default_content_type' => 'application/octet-stream',
+    # Map extensions to their content type
+    'content_type_mapping' => {
+    'html' => 'text/html',
+    'txt'  => 'text/plain',
+    'png'  => 'image/png',
+    'jpg'  => 'image/jpeg'
+    }
+  }
+  return conf
+end
 
 def content_type(path)
   ext = File.extname(path).split(".").last
@@ -11,7 +38,6 @@ end
 
 # This helper function parses the Request-Line and
 # generates a path to a file on the server.
-
 def requested_file(request_line)
   request_uri  = request_line.split(" ")[1]
   path         = URI.unescape(URI(request_uri).path)
@@ -34,59 +60,71 @@ def requested_file(request_line)
   File.join(SERV_CONFIG['web_root'], *clean)
 end
 
-# Except where noted below, the general approach of
-# handling requests and generating responses is
-# similar to that of the "Hello World" example
-# shown earlier.
 
-server = TCPServer.new(SERV_CONFIG['domain'], SERV_CONFIG['port'])
+if ARGV.length < 1 && ARGV.length > 2
+  puts "Usage: ruby server.rb [conf.json ,[FOLDER, PORT]]"
 
-loop do
-  #Server will accept a request
-  socket       = server.accept
-  #This is a GET.
-  request_line = socket.gets
+else
+  if ARGV.length == 1 && ARGV[0].split(".")[1] == "json"
+    SERV_CONFIG = server_conf_file(ARGV[0])
+  else
+    SERV_CONFIG = server_conf(ARGV[0],ARGV[1])
+  end
 
-  STDERR.puts request_line
+  # Except where noted below, the general approach of
+  # handling requests and generating responses is
+  # similar to that of the "Hello World" example
+  # shown earlier.
 
-  path = requested_file(request_line)
-  path = File.join(path, SERV_CONFIG['root_page']) if File.directory?(path)
+  server = TCPServer.new(SERV_CONFIG['domain'], SERV_CONFIG['port'])
 
-  # Make sure the file exists and is not a directory
-  # before attempting to open it.
-  if File.exist?(path) && !File.directory?(path)
-    File.open(path, "rb") do |file|
-      socket.print "HTTP/1.1 200 OK\r\n" +
-        "Content-Type: #{content_type(file)}\r\n" +
-        "Content-Length: #{file.size}\r\n" +
+  loop do
+    #Server will accept a request
+    socket       = server.accept
+    #This is a GET.
+    request_line = socket.gets
+
+    STDERR.puts request_line
+
+    path = requested_file(request_line)
+    path = File.join(path, SERV_CONFIG['root_page']) if File.directory?(path)
+
+    # Make sure the file exists and is not a directory
+    # before attempting to open it.
+    if File.exist?(path) && !File.directory?(path)
+      File.open(path, "rb") do |file|
+        socket.print "HTTP/1.1 200 OK\r\n" +
+          "Content-Type: #{content_type(file)}\r\n" +
+          "Content-Length: #{file.size}\r\n" +
+          "Connection: close\r\n"
+
+        socket.print "\r\n"
+
+        # write the contents of the file to the socket
+        IO.copy_stream(file, socket)
+      end
+    else
+      message = "<html>" +
+        "<head>" +
+        " <title>404 Not Found </title>" +
+        "</head>" +
+        "<body>" +
+        " <h1>Scarlet: 404 Not Found" +
+        " <h2>File not found. Could you please try again later?" +
+        "</body>" +
+        "</html>"
+
+      # respond with a 404 error code to indicate the file does not exist
+      socket.print "HTTP/1.1 404 Not Found\r\n" +
+        "Content-Type: text/html\r\n" +
+        "Content-Length: #{message.size}\r\n" +
         "Connection: close\r\n"
 
       socket.print "\r\n"
 
-      # write the contents of the file to the socket
-      IO.copy_stream(file, socket)
+      socket.print message
     end
-  else
-    message = "<html>" +
-      "<head>" +
-      " <title>404 Not Found </title>" +
-      "</head>" +
-      "<body>" +
-      " <h1>Scarlet: 404 Not Found" +
-      " <h2>File not found. Could you please try again later?" +
-      "</body>" +
-      "</html>"
 
-    # respond with a 404 error code to indicate the file does not exist
-    socket.print "HTTP/1.1 404 Not Found\r\n" +
-      "Content-Type: text/html\r\n" +
-      "Content-Length: #{message.size}\r\n" +
-      "Connection: close\r\n"
-
-    socket.print "\r\n"
-
-    socket.print message
+    socket.close
   end
-
-  socket.close
 end
