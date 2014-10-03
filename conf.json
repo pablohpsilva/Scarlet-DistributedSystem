@@ -6,7 +6,6 @@
     "web_root" : "./public",
     /*
     	Map extensions to their content type
-		Works just like a dictionary~PHP
     */
     "content_type_mapping" : {
 		"html" : "text/html",
