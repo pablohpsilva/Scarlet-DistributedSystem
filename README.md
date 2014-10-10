@@ -29,3 +29,6 @@ Or
 ## Server skills
 * Ruby sockets: https://practicingruby.com/articles/implementing-an-http-file-server
 * Ruby Socket Class: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/socket/rdoc/Socket.html
+
+
+Agora sim...
