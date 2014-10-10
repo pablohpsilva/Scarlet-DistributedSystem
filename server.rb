@@ -1,20 +1,10 @@
 require 'socket'
-require 'uri'
-require 'json'
+require 'open-uri'
 
-def server_conf_file(jsonfile)
-  if File.exist?(jsonfile)
-    file = File.read(jsonfile)
-    conf = JSON.parse(file)
-    puts "JSON Configuration file loaded successfully"
-    return conf
-  end
-end
-
-def server_conf(folder,port)
+def server_conf(folder)
   conf = {
     'domain'   => 'localhost',
-    'port'     => port,
+    'port'     => '8888',
     'root_page'=> 'index.html',
     # Files will be served from this directory
     'web_root' => folder,
@@ -36,95 +26,48 @@ def content_type(path)
   SERV_CONFIG['content_type_mapping'].fetch(ext, SERV_CONFIG['default_content_type'])
 end
 
-# This helper function parses the Request-Line and
-# generates a path to a file on the server.
-def requested_file(request_line)
-  request_uri  = request_line.split(" ")[1]
-  path         = URI.unescape(URI(request_uri).path)
+puts "Starting up server..."
+server = TCPServer.new("localhost",8888)
 
-  clean = []
+loop do
+	Thread.start(server.accept) do |client|
+		#puts "#{client.peeraddr[0]}\n#{client.peeraddr[1]}\n#{client.peeraddr[2]}\n#{client.peeraddr[3]}\n"
+		puts "Server: Connection from #{client.peeraddr[2]} at #{client.peeraddr[3]}"
+		puts "Server: got input from client"
+		pasta_raiz = client.gets.strip
+		porta = client.gets.strip
+		
+		SERV_CONFIG = server_conf(pasta_raiz)
+		
+		puts "Pasta Raiz: #{pasta_raiz}\nPorta: #{porta}\n"
 
-  # Split the path into components
-  parts = path.split("/")
+		path = File.join(pasta_raiz, SERV_CONFIG['root_page']) if File.directory?(pasta_raiz)		
+		
+		if File.exist?(path) && !File.directory?(path)
+			File.open(path, "rb") do |file|				
+				client.puts "HTTP/1.1 200 OK\r\nContent-Type: #{content_type(file)}\r\n"+
+				"Content-Length: #{file.size}\r\nConnection: close\r\n\n"
 
-  parts.each do |part|
-    # skip any empty or current directory (".") path components
-    next if part.empty? || part == '.'
-    # If the path component goes up one directory level (".."),
-    # remove the last clean component.
-    # Otherwise, add the component to the Array of clean components
-    part == '..' ? clean.pop : clean << part
-  end
+				client.puts open(path).readlines
+			end
+		else
+			message = "<html>\n" +
+			"<head>\n" +
+			" <title>404 Not Found </title>\n" +
+			"</head>\n" +
+			"<body>\n" +
+			" <h1>Scarlet: 404 Not Found\n" +
+			" <h2>File not found. Could you please try again later?\n" +
+			"</body>\n" +
+			"</html>\n"
 
-  # return the web root joined to the clean path
-  File.join(SERV_CONFIG['web_root'], *clean)
-end
+			# respond with a 404 error code to indicate the file does not exist
+			client.puts "HTTP/1.1 404 Not Found\r\n" +
+			"Content-Type: text/html\r\n" +
+			"Content-Length: #{message.size}\r\n" +
+			"Connection: close\r\n\n"
 
-
-if ARGV.length < 1 && ARGV.length > 2
-  puts "Usage: ruby server.rb [conf.json ,[FOLDER, PORT]]"
-
-else
-  if ARGV.length == 1 && ARGV[0].split(".")[1] == "json"
-    SERV_CONFIG = server_conf_file(ARGV[0])
-  else
-    SERV_CONFIG = server_conf(ARGV[0],ARGV[1])
-  end
-
-  # Except where noted below, the general approach of
-  # handling requests and generating responses is
-  # similar to that of the "Hello World" example
-  # shown earlier.
-
-  server = TCPServer.new(SERV_CONFIG['domain'], SERV_CONFIG['port'])
-
-  loop do
-    #Server will accept a request
-    socket       = server.accept
-    #This is a GET.
-    request_line = socket.gets
-
-    STDERR.puts request_line
-
-    path = requested_file(request_line)
-    path = File.join(path, SERV_CONFIG['root_page']) if File.directory?(path)
-
-    # Make sure the file exists and is not a directory
-    # before attempting to open it.
-    if File.exist?(path) && !File.directory?(path)
-      File.open(path, "rb") do |file|
-        socket.print "HTTP/1.1 200 OK\r\n" +
-          "Content-Type: #{content_type(file)}\r\n" +
-          "Content-Length: #{file.size}\r\n" +
-          "Connection: close\r\n"
-
-        socket.print "\r\n"
-
-        # write the contents of the file to the socket
-        IO.copy_stream(file, socket)
-      end
-    else
-      message = "<html>" +
-        "<head>" +
-        " <title>404 Not Found </title>" +
-        "</head>" +
-        "<body>" +
-        " <h1>Scarlet: 404 Not Found" +
-        " <h2>File not found. Could you please try again later?" +
-        "</body>" +
-        "</html>"
-
-      # respond with a 404 error code to indicate the file does not exist
-      socket.print "HTTP/1.1 404 Not Found\r\n" +
-        "Content-Type: text/html\r\n" +
-        "Content-Length: #{message.size}\r\n" +
-        "Connection: close\r\n"
-
-      socket.print "\r\n"
-
-      socket.print message
-    end
-
-    socket.close
-  end
-end
+			client.puts message
+		end
+	end  #end thread conversation
+end   #end loop
