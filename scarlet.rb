@@ -1,8 +1,8 @@
 require 'socket'
 require 'uri'
 require 'json'
-load 'Util.rb'
-load 'Server.class.rb'
+load 'utils/Util.rb'
+load 'bin/Server.class.rb'
 
 def main
   server = TCPServer.new( SERV_CONFIG.get_server['domain'], SERV_CONFIG.get_server['port'] )
