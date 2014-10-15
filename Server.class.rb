@@ -6,6 +6,16 @@ class Server
   @server_config = {}
 
   def initialize(folderOrJson=nil, port=nil)
+    set_server(folderOrJson, port)
+    set_server_defaults
+  end
+
+
+  def get_server
+    return @server_config
+  end
+
+  def set_server (folderOrJson=nil, port=nil)
     if !File.directory?(folderOrJson) && File.exist?(folderOrJson)
       @server_config = JSON.parse( File.read(folderOrJson) )
 
@@ -14,57 +24,9 @@ class Server
           'domain'   => 'localhost',
           'port'     => port,
           # Files will be served from this directory
-          'web_root' => folderOrJson
+          'root_folder' => folderOrJson
       }
     end
-
-    ( File.directory?(folderOrJson) && File.exist?(folderOrJson + '/index.html') ) ?
-      @server_config['root_page'] = 'index.html' :
-      @server_config['root_page'] = '<html>' +
-          '<head>' +
-          '  <title>Scarlet</title>' +
-          '</head>' +
-          '<body>' +
-          '  <h1>Scarlet: 200 OK </h1>' +
-          '  <h2>Scarlet is running smoothly. Good job, mate. </h2>' +
-          '</body>' +
-          '</html>'
-
-    if @server_config['default_content_type'] == nil
-      #Treat as binary data if content type cannot be found
-      @server_config['default_content_type'] = 'application/octet-stream'
-    end
-    if @server_config['content_type_mapping'] == nil
-      #Map extensions to their content type
-      @server_config['content_type_mapping'] = {
-          'html' => 'text/html',
-          'txt'  => 'text/plain',
-          'png'  => 'image/png',
-          'jpg'  => 'image/jpeg'
-      }
-    end
-    if @server_config['default_error_page'] == nil
-      @server_config['default_error_page'] =
-          '<html>' +
-              '<head>' +
-              '  <title>404 Not Found </title>' +
-              '</head>' +
-              '<body>' +
-              '  <h1>Scarlet: 404 Not Found </h1>' +
-              '  <h2> ' +
-              '    Could you please try to access that file again later? <br/>' +
-              '    Our minions are fixing the issue. No worries. <br/>' +
-              '    Soon everything is gonna be fine.' +
-              '  </h2>' +
-              '  <h6> ~Whisper~ <b>Scarlet</b>: <i> "Minions, block this user IP..." </i></h6>' +
-              '</body>' +
-              '</html>'
-    end
-  end
-
-
-  def get_server
-    return @server_config
   end
 
 
@@ -96,8 +58,54 @@ class Server
     end
 
     # return the web root joined to the clean path
-    File.join(self.get_server['web_root'], *clean)
+    File.join(self.get_server['root_folder'], *clean)
   end
 
+  private
+
+  def set_server_defaults
+    ( File.directory?(self.get_server['root_folder']) && File.exist?(self.get_server['root_folder'] + '/index.html') ) ?
+        self.get_server['root_page'] = 'index.html' :
+        self.get_server['root_page'] = '<html>' +
+            '<head>' +
+            '  <title>Scarlet</title>' +
+            '</head>' +
+            '<body>' +
+            '  <h1>Scarlet: 200 OK </h1>' +
+            '  <h2>Scarlet is running smoothly. Good job, mate. </h2>' +
+            '</body>' +
+            '</html>'
+
+    if self.get_server['default_content_type'] == nil
+      #Treat as binary data if content type cannot be found
+      self.get_server['default_content_type'] = 'application/octet-stream'
+    end
+    if self.get_server['content_type_mapping'] == nil
+      #Map extensions to their content type
+      self.get_server['content_type_mapping'] = {
+          'html' => 'text/html',
+          'txt'  => 'text/plain',
+          'png'  => 'image/png',
+          'jpg'  => 'image/jpeg'
+      }
+    end
+    if self.get_server['default_error_page'] == nil
+      self.get_server['default_error_page'] =
+          '<html>' +
+              '<head>' +
+              '  <title>404 Not Found </title>' +
+              '</head>' +
+              '<body>' +
+              '  <h1>Scarlet: 404 Not Found </h1>' +
+              '  <h2> ' +
+              '    Could you please try to access that file again later? <br/>' +
+              '    Our minions are fixing the issue. No worries. <br/>' +
+              '    Soon everything is gonna be fine.' +
+              '  </h2>' +
+              '  <h6> ~Whisper~ <b>Scarlet</b>: <i> "Minions, block this IP..." </i></h6>' +
+              '</body>' +
+              '</html>'
+    end
+  end
 
 end
