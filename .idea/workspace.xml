@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a8234fd8-54c7-4fd4-b71a-d6fc24cd85c3" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Server.class.rb" afterPath="$PROJECT_DIR$/bin/Server.class.rb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Util.rb" afterPath="$PROJECT_DIR$/utils/Util.rb" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/conf.json" afterPath="$PROJECT_DIR$/utils/conf.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scarlet.rb" afterPath="$PROJECT_DIR$/scarlet.rb" />
-    </list>
+    <list default="true" id="a8234fd8-54c7-4fd4-b71a-d6fc24cd85c3" name="Default" comment="" />
     <ignored path="scarlet.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -27,11 +22,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="scarlet.rb" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="scarlet.rb" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scarlet.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.22356828" vertical-offset="487" max-vertical-offset="1395">
-              <caret line="46" column="31" selection-start-line="46" selection-start-column="31" selection-end-line="46" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="202" max-vertical-offset="1395">
+              <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="conf.json" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/utils/conf.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.101809956" vertical-offset="0" max-vertical-offset="884">
+              <caret line="6" column="16" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -63,6 +68,7 @@
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/Server.class.rb" />
         <option value="$PROJECT_DIR$/scarlet.rb" />
+        <option value="$PROJECT_DIR$/utils/conf.json" />
       </list>
     </option>
   </component>
@@ -112,6 +118,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="scarlet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scarlet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scarlet" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="utils" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -372,14 +392,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/conf.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.050904978" vertical-offset="0" max-vertical-offset="884">
-          <caret line="3" column="16" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.13574661" vertical-offset="0" max-vertical-offset="884">
@@ -406,8 +418,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scarlet.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22356828" vertical-offset="487" max-vertical-offset="1395">
-          <caret line="46" column="31" selection-start-line="46" selection-start-column="31" selection-end-line="46" selection-end-column="31" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="202" max-vertical-offset="1395">
+          <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/conf.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.101809956" vertical-offset="0" max-vertical-offset="884">
+          <caret line="6" column="16" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
           <folding />
         </state>
       </provider>
