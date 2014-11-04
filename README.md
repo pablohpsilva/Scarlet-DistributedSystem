@@ -32,3 +32,12 @@ Or
 * TCPSocket.send: https://www.ruby-forum.com/topic/92504
 * Threads: http://www.sitepoint.com/threads-ruby/
 * Threads (BEST): http://www.tutorialspoint.com/ruby/ruby_socket_programming.htm
+
+## Event listeners
+* Listen: https://github.com/guard/listen
+
+## Install
+```sh
+  $ sudo gem install bundler
+  $ bundle install
+```

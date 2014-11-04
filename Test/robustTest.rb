@@ -6,7 +6,7 @@ if ARGV.length == 3
   port = ARGV[1]
   path = ARGV[2]
 
-  MAXCLIENTS = 100
+  MAXCLIENTS = 3
   clients = 1
 
   while clients <= MAXCLIENTS
