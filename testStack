@@ -1,0 +1,27 @@
+load './StackNode.rb'
+
+=begin
+@test = []
+
+@test.push 1
+@test.push 2
+@test.push 3
+
+print @test.inspect
+
+print @test.pop
+print @test.pop
+
+@test.push 2
+@test.push 3
+
+print @test.inspect
+=end
+
+
+teste = StackNode.new("cool")
+
+teste.changeController
+
+
+print teste.inspect
