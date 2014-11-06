@@ -32,3 +32,7 @@ Or
 
 
 Agora sim...
+
+
+A quick HTTP proxy server in Ruby: 
+https://gist.github.com/torsten/74107
