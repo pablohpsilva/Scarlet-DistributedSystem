@@ -12,6 +12,7 @@ class LoadBalancerProxy
     end
 
     def addServer serverInstance
+      #raise "lname must be a String" unless lname.kind_of? server
       if @server_in_use == nil
         @server_in_use = serverInstance
         @server_stack.push serverInstance

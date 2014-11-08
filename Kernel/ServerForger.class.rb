@@ -5,14 +5,18 @@ class Server
 
   @server_config = {}
 
-  def initialize(folderOrJson=nil, port=nil)
-    set_server(folderOrJson, port)
-    set_server_defaults
+  def initialize(folderOrJson = nil, port = nil)
+    load_server(folderOrJson, port)
   end
 
 
   def get_server
     return @server_config
+  end
+
+  def load_server(folderOrJson=nil, port=nil)
+    set_server(folderOrJson, port)
+    set_server_defaults
   end
 
   def set_server (folderOrJson=nil, port=nil)
