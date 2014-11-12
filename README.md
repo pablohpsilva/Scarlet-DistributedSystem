@@ -38,6 +38,18 @@ Or
 
 ## Install
 ```sh
+  # ruby Environment
+  $ brew install rbenv ruby-build rbenv-gem-rehash
+  $ echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
+  $ source ~/.bash_profile
+  $ rbenv install 2.1.2
+  $ rbenv rehash
+  $ rbenv global 2.1.2
+
+
+  # Bundler
   $ sudo gem install bundler
   $ bundle install
+  $ brew install rbenv-default-gems
+  $ echo "bundler\n" >> ~/.rbenv/default-gems
 ```
