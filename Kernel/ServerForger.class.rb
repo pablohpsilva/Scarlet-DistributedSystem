@@ -1,6 +1,6 @@
 require 'json'
 
-class Server
+class ServerForger
   public
 
   @server_config = {}
