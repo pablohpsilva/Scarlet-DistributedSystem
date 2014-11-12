@@ -62,10 +62,10 @@ end
 =end
 if !(ARGV.length < 1) && !(ARGV.length > 2)
   if ARGV[0].split('.')[1] == 'json'
-    SERV_CONFIG = Server.new( ARGV[0] ) #from the Server class
+    SERV_CONFIG = ServerForger.new( ARGV[0] ) #from the Server class
     main
   elsif ARGV.length == 2
-    SERV_CONFIG = Server.new( ARGV[0], ARGV[1] )  #from the Server class
+    SERV_CONFIG = ServerForger.new( ARGV[0], ARGV[1] )  #from the Server class
     main
   else
     @serverStrings.using_scarlet #from Util.rb
