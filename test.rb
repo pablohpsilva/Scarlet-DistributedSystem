@@ -1,8 +1,5 @@
 load 'Services/Server.class.rb'
 
-#server1 = Server.new('albert','./Services/conf.json')
-#server2 = Server.new('bruce','localhost','6666')
-
 def main
   server = TCPServer.new( 'localhost', 8888 )
 
@@ -13,8 +10,11 @@ def main
     #Server will accept a request
     Thread.start(server.accept) do |client|
       response = server1.start_server(client)
-      client.print response['response']
-      client.print response['message']
+      client.print "\r\n#{response['response']}\r\n"
+      if ( response['message'] != nil )
+        client.print response['message']
+      end
+
       client.close
     end
   end
