@@ -11,7 +11,7 @@ class Server
     @serverStrings = ServerStrings.new()
     @server_name = ''
 
-    def getAnswer (message, response)
+    def get_answer (message, response)
       return answer = {
           'response' => response,
           'message' => message
@@ -41,7 +41,7 @@ class Server
         message = @server_config.get_server['root_page']
         response = @serverStrings.http_200_ok(message.size)
 
-        return getAnswer(message,response)
+        return get_answer(message,response)
 
       else
 
@@ -64,7 +64,8 @@ class Server
             message = IO.copy_stream(file, client)
 
             # Test this part before deploy it
-            return getAnswer(message,response)
+            print 'HERE'
+            return get_answer(message,response)
           end
 
         else
@@ -77,7 +78,7 @@ class Server
 =end
           response = @serverStrings.http_400_error(message.size)
 
-          return getAnswer(message,response)
+          return get_answer(message,response)
         end
 
 
