@@ -1,5 +1,6 @@
 #!/usr/bin/ruby
 
+=begin
 require 'rubygems'
 require 'bundler/setup'
 require 'listen'
@@ -9,4 +10,4 @@ listener = Listen.to('utils/', only: /conf\.json/) do |modified, added, removed|
   print 'Scarlet esta pronto. Reconfiguracao completa'
 end
 listener.start
-sleep
+sleep=end

@@ -70,7 +70,8 @@ class ServerForger
   def set_server_defaults
     ( File.directory?(self.get_server['root_folder']) && File.exist?(self.get_server['root_folder'] + '/index.html') ) ?
         self.get_server['root_page'] = 'index.html' :
-        self.get_server['root_page'] = '<html>' +
+        self.get_server['root_page'] =
+            '<html>' +
             '<head>' +
             '  <title>Scarlet</title>' +
             '</head>' +
