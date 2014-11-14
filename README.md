@@ -15,6 +15,15 @@ Or
 ```sh
   $ ruby server.rb "./public" 8888
 ```
+Cliente
+
+```sh
+  $ ruby client.rb "host" port "path" method_post
+```
+Example:
+```sh
+  $ ruby client.rb "localhost" 8888 "/index.html" usePost
+```
 
 ## IDE and basic configurations
 * Development setup for MAC OSX: http://www.createdbypete.com/articles/ruby-on-rails-development-setup-for-mac-osx
