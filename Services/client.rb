@@ -6,8 +6,11 @@ $host = ARGV[0]
 $port = ARGV[1]
 $path = ARGV[2]
 $method = ARGV[3]
+$action = ARGV[4]
+$value = ARGV[5]
+$data = ARGV[6]
 
-if ARGV.length >= 3 && ARGV.length < 5
+if ARGV.length >= 3
 	# This is the HTTP request we send to fetch a file	
 	request = "GET #{$path} HTTP/1.0\r\n\r\n"
 
@@ -21,32 +24,28 @@ if ARGV.length >= 3 && ARGV.length < 5
 	print "\n\n"
 	print headers
 	
-	if $method.eql?('usePost') && (response.include? "HTTP/1.1 200 OK")
+	if ARGV.length > 3
 		puts "\n\nmethod: #{$method}\n\n"
-
-		puts "Variavel:"
-		var = $stdin.gets.chomp
-		
-		puts "\n\nValor:"
-		val = $stdin.gets.chomp
-		puts "Variavel = " + var + "\nValor = " + val + "."
 		
 		uri = URI('localhost')
 		puts "\n\nURI = #{uri}\n"
-		#response = Net::HTTP.post_form(uri, {"q" => "My query", "per_page" => "50"})
+		if $data != nil
+			t = "http://"+$host+$method +"?acao="+$action+"&value="+$value+"&dado="+$data
+		else
+			t = "http://"+$host+$method +"?acao="+$action+"&value="+$value
+		end
+		http = Net::HTTP.new($host, $port) # Abre um conexão HTTP com o servidor
+		#req = Net::HTTP::Post.new($method) # Faz uma requisição para um arquivo		
+		req = Net::HTTP::Post.new(t) # Faz uma requisição para um arquivo		
+		req.set_form_data("acao" => $action, "nome" => $value)		
+		response = http.request(req)		
 		
-		http = Net::HTTP.new($host, $port)
-	
-		params = {foo: var}
-		request = Net::HTTP::Post.new($path)
-		request.set_form_data(params)
-		
-		response = http.request(request)
-		puts "request = #{request}"
+		puts "req = #{req}"
 		puts "response = #{response}"
-		puts "response.body = #{response.body}"
+		puts "response.body = #{response.body}"		
 		
 	end
+		
 else
   print "Nope. Try again \n"
 end
