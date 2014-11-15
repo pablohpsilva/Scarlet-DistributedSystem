@@ -18,11 +18,15 @@ Or
 Cliente
 
 ```sh
-  $ ruby client.rb "host" port "path" method_post
+  $ ruby client.rb "host" port "path" "arq" action value data
 ```
 Example:
 ```sh
-  $ ruby client.rb "localhost" 8888 "/index.html" usePost
+  $ ruby client.rb "localhost" 8888 "/index.html" "/Stack.rb" create Stack
+```
+or
+```sh
+  $ ruby client.rb "localhost" 8888 "/index.html" "/Stack.rb" push Stack Test
 ```
 
 ## IDE and basic configurations
