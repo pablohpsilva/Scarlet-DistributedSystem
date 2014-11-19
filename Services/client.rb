@@ -45,7 +45,6 @@ if ARGV.length >= 3
 		puts "response.body = #{response.body}"		
 		
 	end
-		
 else
   print "Nope. Try again \n"
 end

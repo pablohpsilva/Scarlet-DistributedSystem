@@ -17,6 +17,3 @@ GEM
 
 PLATFORMS
   ruby
-
-DEPENDENCIES
-  listen (~> 2.0)

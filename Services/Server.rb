@@ -21,7 +21,7 @@ def main
 		Thread.start(server.accept) do |client|
 
 			request_line = client.gets
-			if (request_line.include? "GET")
+			if request_line.include?('GET')
 
 				STDERR.puts request_line
 
@@ -57,7 +57,7 @@ def main
 
 					client.close
 				end
-			elsif (request_line.include? "POST")				
+			elsif request_line.include?('POST')
 				#puts "\n\nRecebeu metodo POST\n\n"
 				
 				# Separa a string por palavra e as armazena em um array

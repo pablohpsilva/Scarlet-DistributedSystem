@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-
+=begin
 require 'rubygems'
 require 'bundler/setup'
 require 'listen'
@@ -10,3 +10,4 @@ listener = Listen.to('utils/', only: /conf\.json/) do |modified, added, removed|
 end
 listener.start
 sleep
+=end
