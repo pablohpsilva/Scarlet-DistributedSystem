@@ -70,3 +70,8 @@ or
   $ brew install rbenv-default-gems
   $ echo "bundler\n" >> ~/.rbenv/default-gems
 ```
+
+Exemplo de um TCP Proxy com Python:
+http://voorloopnul.com/blog/a-python-proxy-in-less-than-100-lines-of-code/
+
+```
