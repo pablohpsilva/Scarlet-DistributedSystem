@@ -70,8 +70,11 @@ or
   $ brew install rbenv-default-gems
   $ echo "bundler\n" >> ~/.rbenv/default-gems
 ```
+## TCP Proxy Examples
 
 Exemplo de um TCP Proxy com Python:
 http://voorloopnul.com/blog/a-python-proxy-in-less-than-100-lines-of-code/
 
+Transparent TCP proxy in ruby (jruby):
+http://blog.bitmelt.com/2010/01/transparent-tcp-proxy-in-ruby-jruby.html
 ```
