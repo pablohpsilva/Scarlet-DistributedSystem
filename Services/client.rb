@@ -1,5 +1,4 @@
 require 'socket'      # Sockets are in standard library
-require 'net/http'
 require 'uri'
 		
 $host = ARGV[0]
@@ -10,7 +9,7 @@ $action = ARGV[4]
 $value = ARGV[5]
 $data = ARGV[6]
 
-if ARGV.length >= 3
+if ARGV.length == 3
 	# This is the HTTP request we send to fetch a file	
 	request = "GET #{$path} HTTP/1.0\r\n\r\n"
 

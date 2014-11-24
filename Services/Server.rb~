@@ -2,6 +2,7 @@ require 'socket'
 require 'cgi'
 require 'uri'
 require 'json'
+require 'net/http'
 load '../Kernel/ServerStrings.rb'
 load '../Kernel/ServerForger.class.rb'
 load '../Kernel/Stack.rb'
@@ -57,7 +58,7 @@ def main
 					client.close
 				end
 			elsif request_line.include?('POST')
-				puts "\n\nRecebeu metodo POST\n\n"
+				#puts "\n\nRecebeu metodo POST\n\n"
 				
 				# Separa a string por palavra e as armazena em um array
 				s = request_line.split
@@ -79,7 +80,7 @@ def main
 
 				path = SERV_CONFIG.requested_file(request_line)
 
-				if SERV_CONFIG.get_server['root_page'] != 'index2.html' && path == SERV_CONFIG.get_server['root_folder']
+				if SERV_CONFIG.get_server['root_page'] != 'search.rb' && path == SERV_CONFIG.get_server['root_folder']
 					message = SERV_CONFIG.get_server['root_page']
 					client.print @serverStrings.http_200_ok(message.size)
 					client.print message
@@ -117,7 +118,7 @@ end
 =end
 if !(ARGV.length < 1) && !(ARGV.length > 2)
 	if ARGV[0].split('.')[1] == 'json'
-		SERV_CONFIG = ServerForger.new( ARGV[0] ) #from the Server class
+		SERV_CONFIG = Server.new( ARGV[0] ) #from the Server class
 		main
 	elsif ARGV.length == 2
 		SERV_CONFIG = Server.new( ARGV[0], ARGV[1] )  #from the Server class

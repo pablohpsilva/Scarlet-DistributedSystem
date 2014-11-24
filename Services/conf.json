@@ -1,6 +1,6 @@
 {
     "domain": "localhost",
     "port": "8888",
-    "root_folder": "app",
+    "root_folder": "../app",
     "root_page": "index.html"
 }
