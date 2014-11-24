@@ -1,8 +1,8 @@
 require 'socket'
 require 'uri'
 require 'json'
-load 'Kernel/ServerStrings.rb'
-load 'Kernel/ServerForger.class.rb'
+load '../Kernel/ServerStrings.rb'
+load '../Kernel/ServerForger.class.rb'
 
 class Server
 
@@ -12,7 +12,7 @@ class Server
     @server_name = ''
 
     def get_answer (message, response)
-      return answer = {
+      return {
           'response' => response,
           'message' => message
       }
@@ -25,7 +25,7 @@ class Server
       @server_config = ( port == nil ) ? @server_config = ServerForger.new( folderOrJson ) : @server_config = ServerForger.new( folderOrJson, port )
     end
 
-    def start_server (client)
+    def start (client)
       request_line = client.gets
       STDERR.puts request_line
       path = @server_config.requested_file(request_line)
@@ -54,6 +54,10 @@ class Server
           return get_answer(message,response)
         end
       end
+    end
+
+    def get_name
+      return @server_name
     end
 
 end

@@ -9,7 +9,7 @@ def main
   loop do
     #Server will accept a request
     Thread.start(server.accept) do |client|
-      response = server1.start_server(client)
+      response = server1.start(client)
       client.print "\r\n#{response['response']}\r\n"
       if ( response['message'] != nil )
         client.print response['message']
