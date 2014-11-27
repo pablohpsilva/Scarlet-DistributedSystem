@@ -7,6 +7,7 @@ load '../Kernel/ServerForger.class.rb'
 load '../Kernel/Stack.rb'
 
 @serverStrings = ServerStrings.new()
+@stk = Stack.new()
 
 def main
 	# Servidor abre uma conexão TCP para um dominio em uma porta
@@ -64,18 +65,13 @@ def main
 
 				# Separa a URL em categorias, como Scheme, Host, Path, Query e Fragment
 				u = URI.parse(s[1])
-				request = "#{s[0]} #{u.path} #{s[2]}"
-				puts request
+				puts "#{s[0]} #{u.path} #{s[2]}"
+				puts "HOST: #{u.host}"
+				puts u.query
 				#puts "\nPATH = "+ u.path
 				#puts "\nQUERY = " + u.query
 				p = CGI.parse(u.query)
 				values = p.values
-				imprimir = Stack.new()
-				if p.length == 3				
-					imprimir.imprimeParametros(values[0],values[1],values[2])
-				elsif p.length == 2
-					imprimir.imprimeParametros(values[0],values[1])
-				end
 
 				path = SERV_CONFIG.requested_file(request_line)
 
@@ -104,7 +100,34 @@ def main
 						# respond with a 404 error code to indicate that the file does not exist
 						client.print @serverStrings.http_400_error(message.size)
 						client.print message
-					end			
+					end
+
+					action = values[0].to_s.downcase.delete "[\"]"
+					stack_name = values[1].to_s.downcase.delete "[\"]"
+					path_stack = "../Pilhas/#{stack_name}"
+					stack_data = values[2].to_s.downcase.delete "[\"]"
+
+					if action == 'criar'
+						puts "Criando pilha...\n"
+						result = @stk.create(path_stack)
+						client.print result
+					elsif action == 'push'
+						puts "Encrevendo na pilha...\n"
+						result = @stk.push_stack(path_stack,stack_data)
+						client.print result
+					elsif action == 'pop'
+						result = @stk.pop_stack(path_stack)
+						client.print result
+					elsif action == 'dump'
+						result = @stk.displaing(path_stack,stack_name)
+						client.print "\n\n#{result}"
+					elsif action == 'zerar'
+						result = @stk.delete_stack(path_stack)
+						client.print result
+					else
+						puts "Acao #{action} nao existe\n"
+					end
+
 					client.close
 				end
 			end
@@ -120,7 +143,7 @@ if !(ARGV.length < 1) && !(ARGV.length > 2)
 		SERV_CONFIG = ServerForger.new( ARGV[0] ) #from the Server class
 		main
 	elsif ARGV.length == 2
-		SERV_CONFIG = Server.new( ARGV[0], ARGV[1] )  #from the Server class
+		SERV_CONFIG = ServerForger.new( ARGV[0], ARGV[1] )  #from the Server class
 		main
 	else
 		@serverStrings.using_scarlet #from ServerString.rb

@@ -25,8 +25,16 @@ if ARGV.length == 3
 	
 elsif ARGV.length > 3
 	socket = TCPSocket.open($host,$port)  	# Connect to server
+
 	if $data != nil
-		request = "http://"+$host+":8888"+$method +"?acao="+$action+"&value="+$value+"&dado="+$data
+		if $data.include?(" ")
+			puts "tem espaco\n"
+			dat = $data.split.join('%20')
+			puts dat
+		else
+			dat = $data
+		end
+		request = "http://"+$host+":8888"+$method +"?acao="+$action+"&value="+$value+"&dado="+dat
 	else
 		request = "http://"+$host+":8888"+$method +"?acao="+$action+"&value="+$value
 	end
@@ -35,10 +43,10 @@ elsif ARGV.length > 3
 
 	response = socket.read              	# Read complete response
 	headers, body = response.split("\r\n\r\n", 2)
-	print body                 	# And display it
+	print headers
 	print "\n\n"
-	print headers		
-		
+	print body                 	# And display it
+
 else
   print "Nope. Try again \n"
 end
