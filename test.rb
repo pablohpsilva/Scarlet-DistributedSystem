@@ -1,3 +1,5 @@
+load 'Services/ServerInstance.rb'
+=begin
 load 'Services/Server.class.rb'
 
 def main
@@ -21,3 +23,13 @@ def main
 end
 
 main
+=end
+
+puts 'Started...\n'
+#2.times do |i|
+  #Thread.new {
+    #Server_Instance.new('app/',8888+i)
+    Server_Instance.new('app/',8888)
+    puts "server #{i}"
+  #}
+#end

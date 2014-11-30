@@ -1,46 +1,36 @@
+load '../Services/Server.class.rb'
+load '../Services/LoadList.class.rb'
+
 class LoadBalancerProxy
+
   private
-    @server_stack
-    @server_in_use
-    @max_connections
+    @servers_list
+    @max_connections_per_server
 
   public
-    def initialize (instance = nil, connections = 1)
-      @server_stack = []
-      @server_in_use = (instance != nil) ? StackNode.new(instance) : nil
-      @max_connections = connections
+    def initialize(max_connections_per_server = nil)
+      @max_connections_per_server = max_connections_per_server if (max_connections_per_server != nil)
+      @servers_list = Array.new
     end
 
-    def addServer serverInstance
-      #raise "lname must be a String" unless lname.kind_of? server
-      if @server_in_use == nil
-        @server_in_use = serverInstance
-        @server_stack.push serverInstance
+    def register_server(instance_or_name, folder_or_json = nil, port = nil)
+=begin
+      if (instance_or_name.instance_of?(Server))
+        @servers_list << LoadList.new(instance_or_name, @max_connections_per_server)
       else
-        @server_stack.push serverInstance
+        @servers_list << LoadList.new(Server.new(instance_or_name, folder_or_json, port), @max_connections_per_server)
       end
+=end
+      @servers_list << (instance_or_name.instance_of?(Server)) ?
+          LoadList.new(instance_or_name, @max_connections_per_server) :
+          LoadList.new(Server.new(instance_or_name, folder_or_json, port), @max_connections_per_server)
     end
 
-    def getServer
-      if @server_in_use == nil
-        print 'You should addServer before calling a getServer. Now you\'ll get a nil =D'
-        return nil
-      elsif @server_in_use.getController != @max_connections
-        @server_in_use.changeController
-        return @server_in_use.getInstance
-      else
-        @stack_aux = []
-        @server_stack.length.times do |stack|
-          @aux = stack.pop
-          if @aux.getController != @max_connections
-            @server_stack.push @aux
-            @server_in_use = @aux
-            @server_in_use.changeController
-            return @server_in_use
-          end
-        end
+    def get_server
+      (0 .. @servers_list.size).each do |index|
+        return @servers_list[index] if (@servers_list[index].get_counter != @max_connections_per_server)
       end
+      return nil
     end
 
 end
-

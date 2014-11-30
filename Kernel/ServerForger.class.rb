@@ -1,9 +1,10 @@
 require 'json'
 
 class ServerForger
-  public
+  private
     @server_config = {}
 
+  public
     def initialize(folderOrJson = nil, port = nil)
       load_server(folderOrJson, port)
     end

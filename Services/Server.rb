@@ -4,14 +4,16 @@ require 'uri'
 require 'json'
 load '../Kernel/ServerStrings.rb'
 load '../Kernel/ServerForger.class.rb'
-load '../Kernel/Stack.rb'
+load '../Kernel/Server.class.rb'
 
-@serverStrings = ServerStrings.new()
-@stk = Stack.new()
+@server_configs
+@server_strings = ServerStrings.new()
+@server_instance = Server.new()
+#@stk = Stack.new()
 
 def main
 	# Servidor abre uma conexão TCP para um dominio em uma porta
-	server = TCPServer.new( SERV_CONFIG.get_server['domain'], SERV_CONFIG.get_server['port'] )
+	server = TCPServer.new( @server_configs.get_server['domain'], @server_configs.get_server['port'] )
 
 	puts 'Scarlet server is running...'
 		
@@ -20,27 +22,42 @@ def main
 		#Server will accept a request
 		Thread.start(server.accept) do |client|
 
+      @server_instance.start(client)
+
+=begin
 			request_line = client.gets
+
+      if request_line.include?('GET')
+        @server_instance.http_get(client)
+      elsif request_line.include?('POST')
+        @server_instance.http_post(client)
+      end
+
+      client.close
+=end
+
+=begin
 			if request_line.include?('GET')
+        #@http_instance.Get(client, @server_configs)
 
 				STDERR.puts request_line
 
-				path = SERV_CONFIG.requested_file(request_line)
+				path = @server_configs.requested_file(request_line)
 
-				if SERV_CONFIG.get_server['root_page'] != 'index.html' && path == SERV_CONFIG.get_server['root_folder']
-					message = SERV_CONFIG.get_server['root_page']
+				if @server_configs.get_server['root_page'] != 'index.html' && path == @server_configs.get_server['root_folder']
+					message = @server_configs.get_server['root_page']
 					client.print @serverStrings.http_200_ok(message.size)
 					client.print message
 
 				else
 
-					path = File.join(path, SERV_CONFIG.get_server['root_page']) if File.directory?(path)
+					path = File.join(path, @server_configs.get_server['root_page']) if File.directory?(path)
 
 					# Make sure the file exists and is not a directory
 					# before attempting to open it.
 					if File.exist?(path) && !File.directory?(path)
 						File.open(path, 'rb') do |file|
-							content = SERV_CONFIG.content_type(file)
+							content = @server_configs.content_type(file)
 							client.print @serverStrings.http_200_ok(file.size,content)
 
 							# write the contents of the file to the socket
@@ -48,7 +65,7 @@ def main
 						end
 
 					else
-						message = SERV_CONFIG.get_server['default_error_page']
+						message = @server_configs.get_server['default_error_page']
 
 						# respond with a 404 error code to indicate that the file does not exist
 						client.print @serverStrings.http_400_error(message.size)
@@ -57,7 +74,9 @@ def main
 
 					client.close
 				end
-			elsif request_line.include?('POST')
+
+      elsif request_line.include?('POST')
+        #@http_instance.Post(client, @server_configs)
 				puts "\n\nRecebeu metodo POST\n\n"
 				
 				# Separa a string por palavra e as armazena em um array
@@ -73,32 +92,32 @@ def main
 				p = CGI.parse(u.query)
 				values = p.values
 
-				path = SERV_CONFIG.requested_file(request_line)
+				path = @server_configs.requested_file(request_line)
 
-				if SERV_CONFIG.get_server['root_page'] != 'index2.html' && path == SERV_CONFIG.get_server['root_folder']
-					message = SERV_CONFIG.get_server['root_page']
-					client.print @serverStrings.http_200_ok(message.size)
+				if @server_configs.get_server['root_page'] != 'index2.html' && path == @server_configs.get_server['root_folder']
+					message = @server_configs.get_server['root_page']
+					client.print @server_strings.http_200_ok(message.size)
 					client.print message
 
 				else
-					path = File.join(path, SERV_CONFIG.get_server['root_page']) if File.directory?(path)
+					path = File.join(path, @server_configs.get_server['root_page']) if File.directory?(path)
 
 					# Make sure the file exists and is not a directory
 					# before attempting to open it.
 					if File.exist?(path) && !File.directory?(path)
 						File.open(path, 'rb') do |file|
-							content = SERV_CONFIG.content_type(file)
-							client.print @serverStrings.http_200_ok(file.size,content)
+							content = @server_configs.content_type(file)
+							client.print @server_strings.http_200_ok(file.size,content)
 
 							# write the contents of the file to the socket
 							IO.copy_stream(file, client)
 						end
 
 					else
-						message = SERV_CONFIG.get_server['default_error_page']
+						message = @server_configs.get_server['default_error_page']
 
 						# respond with a 404 error code to indicate that the file does not exist
-						client.print @serverStrings.http_400_error(message.size)
+						client.print @server_strings.http_400_error(message.size)
 						client.print message
 					end
 
@@ -130,7 +149,9 @@ def main
 
 					client.close
 				end
+
 			end
+=end
 		end
 	end
 end
@@ -140,14 +161,14 @@ end
 =end
 if !(ARGV.length < 1) && !(ARGV.length > 2)
 	if ARGV[0].split('.')[1] == 'json'
-		SERV_CONFIG = ServerForger.new( ARGV[0] ) #from the Server class
+		@server_configs = ServerForger.new( ARGV[0] ) #from the Server class
 		main
 	elsif ARGV.length == 2
-		SERV_CONFIG = ServerForger.new( ARGV[0], ARGV[1] )  #from the Server class
+		@server_configs = ServerForger.new( ARGV[0], ARGV[1] )  #from the Server class
 		main
 	else
-		@serverStrings.using_scarlet #from ServerString.rb
+		@server_strings.using_scarlet #from ServerString.rb
 	end
 else
-	@serverStrings.using_scarlet #from ServerString.rb
+	@server_strings.using_scarlet #from ServerString.rb
 end
