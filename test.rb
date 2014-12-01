@@ -26,10 +26,11 @@ main
 =end
 
 puts 'Started...\n'
-#2.times do |i|
-  #Thread.new {
-    #Server_Instance.new('app/',8888+i)
-    Server_Instance.new('app/',8888)
+2.times do |i|
+  Thread.new {
     puts "server #{i}"
-  #}
-#end
+    Server_Instance.new('app/',8888+i)
+  }
+end
+
+gets
