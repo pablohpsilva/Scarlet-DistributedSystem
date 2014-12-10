@@ -2,9 +2,9 @@ require 'socket'
 require 'uri'
 require 'json'
 require 'securerandom'
-load 'Kernel/ServerStrings.rb'
-load 'Kernel/ServerForger.class.rb'
-load 'Kernel/Stack.rb'
+load '../Kernel/ServerStrings.rb'
+load '../Kernel/ServerForger.class.rb'
+load '../Kernel/Stack.rb'
 
 class Server
 
@@ -39,13 +39,11 @@ class Server
 
   public
     #def initialize(server_name = nil, folderOrJson = nil, port = nil)
-    def initialize(folder_json = nil, port = nil)
+    def initialize(port = nil)
       #@server_name = ( server_name == nil ) ? 'untitled' : server_name
       @server_name = SecureRandom.urlsafe_base64
       @server_strings = ServerStrings.new
-      @server_config = ( port == nil ) ?
-          @server_config = ServerForger.new( folder_json ) :
-          @server_config = ServerForger.new( folder_json, port )
+      @server_config = ServerForger.new(port)
     end
 
     def get_server_configs
