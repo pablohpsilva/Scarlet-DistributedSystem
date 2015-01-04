@@ -40,7 +40,6 @@ class Server
   public
     #def initialize(server_name = nil, folderOrJson = nil, port = nil)
     def initialize(port = nil)
-      #@server_name = ( server_name == nil ) ? 'untitled' : server_name
       @server_name = SecureRandom.urlsafe_base64
       @server_strings = ServerStrings.new
       @server_config = ServerForger.new(port)
