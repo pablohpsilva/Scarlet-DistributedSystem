@@ -7,10 +7,10 @@ class ServerForger
     @server_config = {}
 
   public
-    def initialize(port = nil)
+    def initialize(address = 'localhost', port = nil)
       @default_folder = '../app/'
       @default_json = 'conf.json'
-      load_server(port)
+      load_server(address, port)
     end
 
 
@@ -18,18 +18,18 @@ class ServerForger
       return @server_config
     end
 
-    def load_server(port = nil)
-      set_server(port)
+    def load_server(address = 'localhost', port = nil)
+      set_server(address, port)
       set_server_defaults
     end
 
-    def set_server (port = nil)
+    def set_server (address = 'localhost', port = nil)
       if !File.directory?(@default_json) && File.exist?(@default_json)
         @server_config = JSON.parse( File.read(@default_json) )
 
       elsif File.directory?(@default_folder) && port
         @server_config = {
-            'domain'   => 'localhost',
+            'domain'   => address,
             'port'     => port,
             # Files will be served from this directory
             'root_folder' => @default_folder

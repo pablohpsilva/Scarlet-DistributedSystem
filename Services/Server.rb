@@ -159,16 +159,17 @@ end
 =begin
   The magic starts right here. Scarlet welcomes you
 =end
-if !(ARGV.length < 1) && !(ARGV.length > 2)
-	if ARGV[0].split('.')[1] == 'json'
-		@server_configs = ServerForger.new( ARGV[0] ) #from the Server class
-		main
-	elsif ARGV.length == 2
-		@server_configs = ServerForger.new( ARGV[0], ARGV[1] )  #from the Server class
-		main
-	else
-		@server_strings.using_scarlet #from ServerString.rb
-	end
-else
-	@server_strings.using_scarlet #from ServerString.rb
-end
+# if !(ARGV.length < 1) && !(ARGV.length > 2)
+# 	if ARGV[0].split('.')[1] == 'json'
+# 		@server_configs = ServerForger.new( ARGV[0] ) #from the Server class
+# 		main
+# 	elsif ARGV.length == 2
+# 		@server_configs = ServerForger.new( ARGV[0], ARGV[1] )  #from the Server class
+# 		main
+# 	else
+# 		@server_strings.using_scarlet #from ServerString.rb
+# 	end
+# else
+# 	@server_strings.using_scarlet #from ServerString.rb
+# end
+

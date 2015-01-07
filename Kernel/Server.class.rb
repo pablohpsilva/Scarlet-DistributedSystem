@@ -39,10 +39,10 @@ class Server
 
   public
     #def initialize(server_name = nil, folderOrJson = nil, port = nil)
-    def initialize(port = nil)
+    def initialize(port = nil, address = 'localhost')
       @server_name = SecureRandom.urlsafe_base64
       @server_strings = ServerStrings.new
-      @server_config = ServerForger.new(port)
+      @server_config = ServerForger.new(address, port)
     end
 
     def get_server_configs
