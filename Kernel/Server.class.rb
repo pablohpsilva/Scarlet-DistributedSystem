@@ -65,7 +65,7 @@ class Server
       client.close
     end
 
-
+    # Esse metodo e usado para buscar um dado
     def http_get(client, request_line)
       STDERR.puts "Server on duty: #{get_name}"
       STDERR.puts request_line
@@ -87,7 +87,15 @@ class Server
       end
     end
 
+    def http_put
+      #TODO esse metodo e usado para atualizar dados
+    end
 
+    def http_delete
+      #TODO esse metodo e usado para deletar dados
+    end
+
+    # Esse metodo e usado para salvar um dado
     def http_post(client, request_line)
       #puts "\n\nRecebeu metodo POST\n\n"
       STDERR.puts "Server on duty: #{get_name}"
@@ -127,19 +135,19 @@ class Server
         stack_data = values[2].to_s.downcase.delete "[\"]"
 
         case action
-          when 'criar'
+          when 'criar' #POST
             puts "Criando pilha...\n"
             message = @stk.create(path_stack)
             client.print message
-          when 'push'
+          when 'push' #PUT
             puts "Encrevendo na pilha...\n"
             message = @stk.push_stack(path_stack,stack_data)
             client.print message
-          when 'pop'
+          when 'pop' #DELETE
             puts "Tirando da pilha...\n"
             message = @stk.pop_stack(path_stack)
             client.print message
-          when 'dump'
+          when 'dump' #GET
             puts "Imprimindo a pilha...\n"
             message = @stk.displaing(path_stack,stack_name)
             client.print "\n\n#{message}"

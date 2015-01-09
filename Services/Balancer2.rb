@@ -2,20 +2,21 @@ require 'socket'
 require 'uri'
 load './ServerInstance.rb'
 
-@remote_ports = (8888..8889).to_a
+@remote_ports = (8888..8892).to_a
+#@remote_ports << 80
 @remote_host = 'localhost'
-#@remote_port = 8888
+@cloud_remote_host = 'amazonAddress'
+
 @load_balancer_listener = nil
 @load_balancer_listener_port = 8080
+
 @max_threads = 5
 @threads = []
-@servers = []
+
+#@servers = []
 @interval = '0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,y,z'.split(',')
 
 @distributed_servers = nil
-
-
-
 
 @counter = 0
 
@@ -23,7 +24,7 @@ def load_servers
   @remote_ports.length.times do |i|
     Thread.new {
       puts "server running #{i} on port #{@remote_ports[i]}"
-      @servers << Server_Instance.new(@remote_ports[i])
+      Server_Instance.new(@remote_ports[i])
     }
   end
 end
