@@ -14,6 +14,7 @@ class Server_Instance
 
   public
     def initialize(port = nil)
+      puts "Foi\n"
       initialize_server(port)
       server = TCPServer.new( @server_instance.get_server_configs.get_server['domain'], @server_instance.get_server_configs.get_server['port'] )
       puts "Scarlet server #{@server_instance.get_name} is running on port #{@server_instance.get_server_configs[]}..."

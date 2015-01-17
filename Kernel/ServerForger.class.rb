@@ -1,4 +1,7 @@
 require 'json'
+require 'cgi'
+require 'uri'
+require 'socket'
 
 class ServerForger
   private
@@ -48,8 +51,9 @@ class ServerForger
     # This helper function parses the Request-Line and
     # generates a path to a file on the server.
     def requested_file(request_line)
-      request_uri  = request_line.split(' ')[1]
-      path         = URI.unescape(URI(request_uri).path)
+      #request_uri  = request_line.split(' ')[1]
+      #puts "request_uri #{request_uri}\n"
+      path         = URI.unescape(URI(request_line).path)
 
       clean = []
 
