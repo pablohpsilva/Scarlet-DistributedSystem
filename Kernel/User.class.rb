@@ -24,17 +24,6 @@ class User
   # end
 
   private
-    @id = nil
-    @first_name
-    @last_name
-    @email
-    @age
-    @gender
-    @password
-    @telephone
-    @interests = []
-    @friends = []
-
     def set_md5_id
       if @id.nil?
         @id = Digest::MD5.hexdigest(@email)
@@ -117,7 +106,11 @@ class User
 
     def save_user_on_file
       begin
-        file = File.open("#{@id}.json", 'w+')
+        folder = @id.chars.first
+        if !Dir.exist?(folder)
+          Dir.mkdir(@id.chars.first)
+        end
+        file = File.open("#{folder}/#{@id}.json", 'w+')
         file.write(to_json)
       rescue IOError => e
         throw e
