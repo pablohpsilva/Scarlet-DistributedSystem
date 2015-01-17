@@ -25,6 +25,7 @@ alfredo = User.new('alfredo', 'gomes', 'a@a.c', 21, 'M', 'graveto', '3432102954'
 wander = User.new('wander', 'gomes', 'w@a.c', 20, 'M', '123graveto', '3432102954', ['mulheres', 'corrida', 'brinco'], [])
 luks = User.new('luks', 'gomes', 'l@a.c', 19, 'M', 'graveto123', '5432102954', ['mulheres', 'games', 'broca'], [])
 gata = User.new('gata', 'gostosa', 'tesao@a.c', 25, 'F', 'douatudo', '12312312313', ['pintinhos'], [])
+joao = User.new
 
 alfredo.friends = [wander, luks, gata]
 wander.friends = [alfredo, luks, gata]
@@ -35,3 +36,9 @@ alfreds = '{"id"=>"d855f08e9b9af1509bc84ff3cddf31c2", "first_name"=>"alfredo", "
 
 puts luks
 puts alfredo.to_json
+
+joao.from_json_file('user.json')
+joao.friends = [alfredo]
+puts joao.inspect
+
+joao.save_user_on_file
