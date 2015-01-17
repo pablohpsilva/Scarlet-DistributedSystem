@@ -3,6 +3,7 @@ require 'digest/md5'
 
 class User
   @id
+  #@friends = []
   attr_accessor :first_name
   attr_accessor :last_name
   attr_accessor :email
@@ -89,28 +90,39 @@ class User
 
     def from_json_file(fileUrl)
       data = JSON.parse( File.read(fileUrl) )
-      @first_name = data['n']
-      @last_name = data['l']
-      @email = data['e']
-      @age = data['a']
-      @gender = data['g']
-      @password = data['p']
-      @telephone = data['t']
-      @interests = data['i']
-      @friends = convert_friends(data['f'])
+      @first_name = data['first_name']
+      @last_name = data['last_name']
+      @email = data['email']
+      @age = data['age']
+      @gender = data['gender']
+      @password = data['password']
+      @telephone = data['telephone']
+      @interests = data['interests']
+      @friends = convert_friends(data['friends'])
       @id = data['id'].nil? ? set_md5_id : data['id']
     end
 
     def from_json_data(data)
-      @first_name = data['n']
-      @last_name = data['l']
-      @email = data['e']
-      @age = data['a']
-      @gender = data['g']
-      @password = data['p']
-      @telephone = data['t']
-      @interests = data['i']
-      @friends = convert_friends(data['f'])
+      @first_name = data['first_name']
+      @last_name = data['last_name']
+      @email = data['email']
+      @age = data['age']
+      @gender = data['gender']
+      @password = data['password']
+      @telephone = data['telephone']
+      @interests = data['interests']
+      @friends = convert_friends(data['friends'])
       @id = data['id'].nil? ? set_md5_id : data['id']
+    end
+
+    def save_user_on_file
+      begin
+        file = File.open("#{@id}.json", 'w+')
+        file.write(to_json)
+      rescue IOError => e
+        throw e
+      ensure
+        file.close unless file == nil
+      end
     end
 end

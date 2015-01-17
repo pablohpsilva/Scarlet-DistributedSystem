@@ -1,0 +1,12 @@
+{
+  "id": "07ced8e99da6748a15f1775b2b26a00c",
+  "first_name": "Joao",
+  "last_name": "Feijao",
+  "email": "vaquinha@joaofeijao.io",
+  "age": 21,
+  "gender": "M",
+  "password": "vaquinha",
+  "telephone": "3212232112",
+  "interests": ["cachorros","leite", "carne"],
+  "friends": []
+}
