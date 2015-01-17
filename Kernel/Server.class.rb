@@ -108,7 +108,7 @@ class Server
       else
         #path = File.join(path, @server_config.get_server['root_page']) if File.directory?(path)
         path = File.join(basic_data['path'], @server_config.get_server['root_page']) if File.directory?(basic_data['path'])
-        
+
         # Make sure the file exists and is not a directory
         # before attempting to open it.
         if File.exist?(path) && !File.directory?(path)
