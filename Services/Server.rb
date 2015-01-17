@@ -6,7 +6,7 @@ load '../Kernel/ServerStrings.rb'
 load '../Kernel/ServerForger.class.rb'
 load '../Kernel/Server.class.rb'
 
-@server_configs
+@server_configs = ServerForger.new()
 @server_strings = ServerStrings.new()
 @server_instance = Server.new()
 #@stk = Stack.new()
@@ -172,4 +172,5 @@ end
 # else
 # 	@server_strings.using_scarlet #from ServerString.rb
 # end
+main
 

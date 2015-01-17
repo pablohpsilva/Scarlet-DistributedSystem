@@ -62,6 +62,12 @@ class Server
         self.http_get(client, request_line)
       elsif request_line.include?('post')
         self.http_post(client, request_line)
+      elsif request_line.include?('put')
+        self.http_put(client,request_line)
+      elsif request_line.include?('delete')
+        self.http_delete(client,request_line)
+      else
+        client.print "\nAcao nao encontrada, tente novamente.\n"
       end
 
       client.close

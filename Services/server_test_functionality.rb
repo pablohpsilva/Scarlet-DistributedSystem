@@ -11,8 +11,6 @@ def main
   loop do
     Thread.start(server.accept) do |client|
       @server_instance.start(client)
-      client.print("Feito\n")
-      client.close
     end
   end
 end
