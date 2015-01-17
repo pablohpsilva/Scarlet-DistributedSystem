@@ -38,6 +38,22 @@ class Server
       #return get_answer(message,response)
     end
 
+    def http_basics(request_line)
+      STDERR.puts "Server on duty: #{get_name}"
+      STDERR.puts request_line
+
+      u = URI.parse(request_line)
+      puts "\nGET #{u.path} HTTP/1.0\r\n\r\nHOST: #{u.host} \n#{u.query}"
+      values = CGI.parse(u.query).values
+      u.path.delete! '/'
+
+      path = @server_config.requested_file(u.path)
+      return {
+          'path' => path,
+          'values' => values
+      }
+    end
+
   public
     #def initialize(server_name = nil, folderOrJson = nil, port = nil)
     def initialize(port = nil, address = 'localhost')
@@ -75,20 +91,24 @@ class Server
 
     # Esse metodo e usado para buscar um dado
     def http_get(client, request_line)
-      STDERR.puts "Server on duty: #{get_name}"
-      STDERR.puts request_line
+      # STDERR.puts "Server on duty: #{get_name}"
+      # STDERR.puts request_line
+      #
+      # u = URI.parse(request_line)
+      # puts "\nGET #{u.path} HTTP/1.0\r\n\r\nHOST: #{u.host} \n#{u.query}"
+      # values = CGI.parse(u.query).values
+      # u.path.delete! '/'
+      #
+      # path = @server_config.requested_file(u.path)
 
-      u = URI.parse(request_line)
-      puts "\nGET #{u.path} HTTP/1.0\r\n\r\nHOST: #{u.host} \n#{u.query}"
-      values = CGI.parse(u.query).values
-      u.path.delete! '/'
-
-      path = @server_config.requested_file(u.path)
+      basic_data = http_basics(request_line)
 
       if @server_config.get_server['root_page'] != 'index.html' && path == @server_config.get_server['root_folder']
         load_default_page(client)
       else
-        path = File.join(path, @server_config.get_server['root_page']) if File.directory?(path)
+        #path = File.join(path, @server_config.get_server['root_page']) if File.directory?(path)
+        path = File.join(basic_data['path'], @server_config.get_server['root_page']) if File.directory?(basic_data['path'])
+        
         # Make sure the file exists and is not a directory
         # before attempting to open it.
         if File.exist?(path) && !File.directory?(path)
@@ -97,7 +117,8 @@ class Server
           respond_error_page(client)
         end
 
-        stack_name = values[1].to_s.downcase.delete "[\"]"
+        stack_name = basic_data['values'][1].to_s.downcase.delete "[\"]"
+        # stack_name = values[1].to_s.downcase.delete "[\"]"
         path_stack = "../Pilhas/#{stack_name}"
         puts "Imprimindo a pilha...\n"
         message = @stk.displaing(path_stack,stack_name)
@@ -107,22 +128,25 @@ class Server
     end
 
     def http_put(client, request_line)
-      STDERR.puts "Server on duty: #{get_name}"
-      STDERR.puts request_line
+      # STDERR.puts "Server on duty: #{get_name}"
+      # STDERR.puts request_line
+      #
+      # # Separa a URL em categorias, como Scheme, Host, Path, Query e Fragment
+      # u = URI.parse(request_line)
+      # puts "\nPOST #{u.path} HTTP/1.0\r\n\r\nHOST: #{u.host} \n#{u.query}"
+      # values = CGI.parse(u.query).values
+      # u.path.delete! '/'
+      #
+      # path = @server_config.requested_file(u.path)
 
-      # Separa a URL em categorias, como Scheme, Host, Path, Query e Fragment
-      u = URI.parse(request_line)
-      puts "\nPOST #{u.path} HTTP/1.0\r\n\r\nHOST: #{u.host} \n#{u.query}"
-      values = CGI.parse(u.query).values
-      u.path.delete! '/'
-
-      path = @server_config.requested_file(u.path)
+      basic_data = http_basics(request_line)
 
       if @server_config.get_server['root_page'] != 'index2.html' && path == @server_config.get_server['root_folder']
         load_default_page(client)
 
       else
-        path = File.join(path, @server_config.get_server['root_page']) if File.directory?(path)
+        # path = File.join(path, @server_config.get_server['root_page']) if File.directory?(path)
+        path = File.join(basic_data['path'], @server_config.get_server['root_page']) if File.directory?(basic_data['path'])
 
         # Make sure the file exists and is not a directory
         # before attempting to open it.
@@ -134,9 +158,11 @@ class Server
           return nil
         end
 
-        stack_name = values[1].to_s.downcase.delete "[\"]"
+        # stack_name = values[1].to_s.downcase.delete "[\"]"
+        stack_name = basic_data['values'][1].to_s.downcase.delete "[\"]"
         path_stack = "../Pilhas/#{stack_name}"
-        stack_data = values[2].to_s.downcase.delete "[\"]"
+        # stack_data = values[2].to_s.downcase.delete "[\"]"
+        stack_data = basic_data['values'][2].to_s.downcase.delete "[\"]"
         puts "Encrevendo na pilha...\n"
         message = @stk.push_stack(path_stack,stack_data)
         client.print message
@@ -145,22 +171,25 @@ class Server
     end
 
     def http_delete(client, request_line)
-      STDERR.puts "Server on duty: #{get_name}"
-      STDERR.puts request_line
+      # STDERR.puts "Server on duty: #{get_name}"
+      # STDERR.puts request_line
+      #
+      # # Separa a URL em categorias, como Scheme, Host, Path, Query e Fragment
+      # u = URI.parse(request_line)
+      # puts "\nPOST #{u.path} HTTP/1.0\r\n\r\nHOST: #{u.host} \n#{u.query}"
+      # values = CGI.parse(u.query).values
+      # u.path.delete! '/'
+      #
+      # path = @server_config.requested_file(u.path)
 
-      # Separa a URL em categorias, como Scheme, Host, Path, Query e Fragment
-      u = URI.parse(request_line)
-      puts "\nPOST #{u.path} HTTP/1.0\r\n\r\nHOST: #{u.host} \n#{u.query}"
-      values = CGI.parse(u.query).values
-      u.path.delete! '/'
-
-      path = @server_config.requested_file(u.path)
+      basic_data = http_basics(request_line)
 
       if @server_config.get_server['root_page'] != 'index2.html' && path == @server_config.get_server['root_folder']
         load_default_page(client)
 
       else
-        path = File.join(path, @server_config.get_server['root_page']) if File.directory?(path)
+        # path = File.join(path, @server_config.get_server['root_page']) if File.directory?(path)
+        path = File.join(basic_data['path'], @server_config.get_server['root_page']) if File.directory?(basic_data['path'])
 
         # Make sure the file exists and is not a directory
         # before attempting to open it.
@@ -171,7 +200,8 @@ class Server
           respond_error_page(client)
           return nil
         end
-        stack_name = values[1].to_s.downcase.delete "[\"]"
+        stack_name = basic_data['values'][1].to_s.downcase.delete "[\"]"
+        # stack_name = values[1].to_s.downcase.delete "[\"]"
         path_stack = "../Pilhas/#{stack_name}"
         puts "Tirando da pilha...\n"
         message = @stk.pop_stack(path_stack)
@@ -182,22 +212,25 @@ class Server
 
     # Esse metodo e usado para salvar um dado
     def http_post(client, request_line)
-      STDERR.puts "Server on duty: #{get_name}"
-      STDERR.puts request_line
+      # STDERR.puts "Server on duty: #{get_name}"
+      # STDERR.puts request_line
+      #
+      # # Separa a URL em categorias, como Scheme, Host, Path, Query e Fragment
+      # u = URI.parse(request_line)
+      # puts "\nPOST #{u.path} HTTP/1.0\r\n\r\nHOST: #{u.host} \n#{u.query}"
+      # values = CGI.parse(u.query).values
+      # u.path.delete! '/'
+      #
+      # path = @server_config.requested_file(u.path)
 
-      # Separa a URL em categorias, como Scheme, Host, Path, Query e Fragment
-      u = URI.parse(request_line)
-      puts "\nPOST #{u.path} HTTP/1.0\r\n\r\nHOST: #{u.host} \n#{u.query}"
-      values = CGI.parse(u.query).values
-      u.path.delete! '/'
-
-      path = @server_config.requested_file(u.path)
+      basic_data = http_basics(request_line)
 
       if @server_config.get_server['root_page'] != 'index2.html' && path == @server_config.get_server['root_folder']
         load_default_page(client)
 
       else
-        path = File.join(path, @server_config.get_server['root_page']) if File.directory?(path)
+        # path = File.join(path, @server_config.get_server['root_page']) if File.directory?(path)
+        path = File.join(basic_data['path'], @server_config.get_server['root_page']) if File.directory?(basic_data['path'])
 
         # Make sure the file exists and is not a directory
         # before attempting to open it.
@@ -210,7 +243,8 @@ class Server
         end
 
         #action = values[0].to_s.downcase.delete "[\"]"
-        stack_name = values[1].to_s.downcase.delete "[\"]"
+        stack_name = basic_data['values'][1].to_s.downcase.delete "[\"]"
+        # stack_name = values[1].to_s.downcase.delete "[\"]"
         path_stack = "../Pilhas/#{stack_name}"
         puts "Criando pilha...\n"
         message = @stk.create(path_stack)
