@@ -125,14 +125,12 @@ class Server
 
         # Make sure the file exists and is not a directory
         # before attempting to open it.
-=begin
         if File.exist?(path) && !File.directory?(path)
           process_file(path, client)
         else
           respond_error_page(client)
           return nil
         end
-=end
 
         v = basic_data['values'].split
         ee = v.map{|e| e.gsub(',','')}
@@ -182,14 +180,12 @@ class Server
 
         # Make sure the file exists and is not a directory
         # before attempting to open it.
-=begin
         if File.exist?(path) && !File.directory?(path)
           process_file(path, client)
         else
           respond_error_page(client)
           return nil
         end
-=end
 
         v = basic_data['values'].split
         ee = v.map{|e| e.gsub(',','')}
