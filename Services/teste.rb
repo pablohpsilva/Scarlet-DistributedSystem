@@ -35,10 +35,13 @@ gata.friends = [alfredo]
 alfreds = '{"id"=>"d855f08e9b9af1509bc84ff3cddf31c2", "first_name"=>"alfredo", "last_name"=>"gomes", "email"=>"a@a.c", "age"=>21, "gender"=>"M", "password"=>"graveto", "telephone"=>"3432102954", "interests"=>["mulheres", "carros", "bolsa"], "friends"=>[]}'
 
 puts luks
-puts alfredo.to_json
+puts alfredo.user_to_json
 
 joao.from_json_file('user.json')
 joao.friends = [alfredo]
 puts joao.inspect
 
-joao.save_user_on_file
+new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], nil)
+
+puts new_User.user_to_json
+# joao.save_user_on_file

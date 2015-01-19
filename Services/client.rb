@@ -38,6 +38,7 @@ if  ARGV.length > 3
 	#O GET precisa somente do email do usuario que deseja buscar
 	if $action.include?('get')
 		$email = ARGV[4]
+		#GET /index.html?acao=oi&valor=ola HTTP/1.1
 		request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&value="+$email
 
 	# O POST envia todos os dados do novo usuário a ser cadastrado, num primeiro instante a tabela de friends é nula
@@ -73,6 +74,7 @@ if  ARGV.length > 3
 		request = "ERROR"
 	end
 
+	puts request
 	socket.print(request)
 	puts "Mensagem enviada\n"
 	response = socket.read              	# Read complete response

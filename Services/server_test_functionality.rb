@@ -10,7 +10,8 @@ def main
 
   loop do
     Thread.start(server.accept) do |client|
-      @server_instance.start(client)
+      puts client.inspect
+      @server_instance.start(client, client.gets)
     end
   end
 end

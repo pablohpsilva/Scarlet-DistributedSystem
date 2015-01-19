@@ -4,6 +4,7 @@ require 'json'
 require 'cgi'
 require 'securerandom'
 require 'digest'
+load '../Kernel/User.class.rb'
 load '../Kernel/ServerStrings.rb'
 load '../Kernel/ServerForger.class.rb'
 
@@ -42,10 +43,8 @@ class Server
       STDERR.puts request_line
 
       u = URI.parse(request_line)
-      puts "\nGET #{u.path} HTTP/1.0\r\n\r\nHOST: #{u.host} \n#{u.query}"
       values = CGI.parse(u.query).values
       u.path.delete! '/'
-
       path = @server_config.requested_file(u.path)
       return {
           'path' => path,
@@ -70,17 +69,18 @@ class Server
     end
 
 
-    def start(client)
-      request_line = client.gets
+    def start(client, request)
+      request_line = request.split(' ')
       STDERR.puts request_line
-      if request_line.include?('http_get')
-        self.http_get(client, request_line)
-      elsif request_line.include?('http_post')
-        self.http_post(client, request_line)
-      elsif request_line.include?('http_put')
-        self.http_put(client,request_line)
-      elsif request_line.include?('http_delete')
-        self.http_delete(client,request_line)
+      method = request_line[0]
+      if method.include?('GET')
+        self.http_get(client, request_line[1])
+      elsif method.include?('POST')
+        self.http_post(client, request_line[1])
+      elsif method.include?('PUT')
+        self.http_put(client,request_line[1])
+      elsif method.include?('DELETE')
+        self.http_delete(client,request_line[1])
       else
         client.print "\nAcao nao encontrada, tente novamente.\n"
       end
@@ -92,59 +92,25 @@ class Server
     def http_get(client, request_line)
       basic_data = http_basics(request_line)
 
-      if @server_config.get_server['root_page'] != 'index.html' && path == @server_config.get_server['root_folder']
-        load_default_page(client)
-      else
-        path = File.join(basic_data['path'], @server_config.get_server['root_page']) if File.directory?(basic_data['path'])
+      v = basic_data['values'].split
+      md5 = Digest::MD5.hexdigest(v[0])
+      get_User = User.new
+      get_User.get_user_on_file(md5)
 
-        # Make sure the file exists and is not a directory
-        # before attempting to open it.
-        if File.exist?(path) && !File.directory?(path)
-          process_file(path,client)
-        else
-          respond_error_page(client)
-        end
-
-        # Aqui recupera o email do usuário e converte em seu equivalente MD5 para buscar na tabela correspondente
-        v = basic_data['values'].split
-        ee = v.map{|e| e.gsub(',','')}
-        ee[1] = Digest::MD5.hexdigest(ee[1])
-        get_User = User.new.from_json_data(ee[1])
-      end
-      client.close
+      message = get_User.user_to_json.to_json
+      client.print @server_strings.http_200_ok(message.length, 'text/json')
+      client.print message
     end
 
     def http_put(client, request_line)
-      puts "Entrou no PUT\n"
       basic_data = http_basics(request_line)
 
-      if @server_config.get_server['root_page'] != 'index.html' && path == @server_config.get_server['root_folder']
-        load_default_page(client)
-
-      else
-        path = File.join(basic_data['path'], @server_config.get_server['root_page']) if File.directory?(basic_data['path'])
-
-        # Make sure the file exists and is not a directory
-        # before attempting to open it.
-        if File.exist?(path) && !File.directory?(path)
-          process_file(path, client)
-        else
-          respond_error_page(client)
-          return nil
-        end
-
-        # Aqui recupera o email, o nome da tabela, interests ou friends, e o valor a ser gravado
-        # O email é convertido para seu equivalente MD5 para poder buscar pelo usuário na tabela correspondente
-        v = basic_data['values'].split
-        ee = v.map{|e| e.gsub(',','')}
-        ee[1] = Digest::MD5.hexdigest(ee[1])
-
-        # ee[1] = email
-        # ee[2] = valor ou nome da tabela
-        # ee[3] = valor do dado a ser gravado
-        update_User = User.new.from_json_data(ee[1..3])
-      end
-      client.close
+      # Aqui recupera o email, o nome da tabela, interests ou friends, e o valor a ser gravado
+      # O email é convertido para seu equivalente MD5 para poder buscar pelo usuário na tabela correspondente
+      v = basic_data['values'].split
+      ee = v.map{|e| e.gsub(',','')}
+      ee[1] = Digest::MD5.hexdigest(ee[1])
+      update_User = User.new.from_json_data(ee[1..3])
     end
 
     def http_delete(client, request_line)
@@ -184,38 +150,21 @@ class Server
     def http_post(client, request_line)
       basic_data = http_basics(request_line)
 
-      if @server_config.get_server['root_page'] != 'index.html' && path == @server_config.get_server['root_folder']
-        load_default_page(client)
+      v = basic_data['values'].split
+      # ee = v.map{|e| e.gsub(',','')}
+      puts v.inspect
+      ee = v.map{|e| e.gsub(',','')}
+      new_User = User.new(ee[0], ee[1], ee[2], ee[3], ee[4], ee[5], ee[6], ee[7])
+      new_User.interests = [new_User.interests]
+      # new_User User.new
 
-      else
-        path = File.join(basic_data['path'], @server_config.get_server['root_page']) if File.directory?(basic_data['path'])
-
-        # Make sure the file exists and is not a directory
-        # before attempting to open it.
-        if File.exist?(path) && !File.directory?(path)
-          process_file(path, client)
-        else
-          respond_error_page(client)
-          return nil
-        end
-
-        v = basic_data['values'].split
-        ee = v.map{|e| e.gsub(',','')}
-        # ee[1] = first_name
-        # ee[2] = last_name
-        # ee[3] = email
-        # ee[4] = age
-        # ee[5] = gender
-        # ee[6] = password
-        # ee[7] = telephone
-        # ee[8] = interests
-        new_User = User.new.from_json_data(ee[1..8])
-        if new_User.instance_of?(User)
-          new_User.save_user_on_file
-        end
-
+      # new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], nil)
+      if new_User.instance_of?(User)
+        new_User.save_user_on_file
       end
-      client.close
+      puts new_User.user_to_json.to_json.to_s
+      client.print new_User.user_to_json.to_json
+      # client.close
     end
 
 end

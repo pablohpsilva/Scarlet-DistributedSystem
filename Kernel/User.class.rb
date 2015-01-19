@@ -37,7 +37,7 @@ class User
         friends_list.each do |index|
           if index.instance_of?(User)
             index.friends = []
-            json_friends_list << ( index.to_json )
+            json_friends_list << ( index.user_to_json )
           else
             index['friends'] = []
             json_friends_list << ( User.new.from_json_data(index) )
@@ -49,7 +49,7 @@ class User
 
   public
     def initialize(n = nil, l = nil, e = nil, a = nil, g = nil, p = nil, t = nil, i = nil, f = nil)
-      if !n.nil? && !l.nil? && !e.nil? && !a.nil? && !g.nil? && !p.nil? && !t.nil? && !i.nil? && !f.nil?
+      if !n.nil? && !l.nil? && !e.nil? && !a.nil? && !g.nil? && !p.nil? && !t.nil? && !i.nil?
         @first_name= n
         @last_name = l
         @email = e
@@ -58,14 +58,14 @@ class User
         @password = p
         @telephone = t
         @interests = i
-        @friends = f
+        @friends = f.nil? ? [] : f
         set_md5_id
       end
     end
 
     # Transforma o objeto em json
     # Quando precisar enviar para um usuário
-    def to_json
+    def user_to_json
       return {
         'id' => @id,
         'first_name' => @first_name,
@@ -82,7 +82,7 @@ class User
 
     #O http_get usa este método,
     def from_json_file(fileUrl)
-      data = JSON.parse( File.read(fileUrl) )
+      data = JSON.parse(  File.read("#{fileUrl.chars.first}/#{fileUrl}.json") )
       @first_name = data['first_name']
       @last_name = data['last_name']
       @email = data['email']
@@ -117,11 +117,24 @@ class User
           Dir.mkdir(@id.chars.first)
         end
         file = File.open("#{folder}/#{@id}.json", 'w+')
-        file.write(to_json)
+        file.write(user_to_json.to_json)
       rescue IOError => e
         throw e
       ensure
         file.close unless file == nil
       end
+    end
+
+    def get_user_on_file (md5_email)
+      # begin
+      folder = md5_email.chars.first
+      file = File.read("#{folder}/#{md5_email}.json")
+      from_json_data( JSON.parse( file ) )
+      return
+      # rescue IOError => e
+      #   throw e
+      # ensure
+      #   file.close unless file == nil
+      # end
     end
 end
