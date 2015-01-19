@@ -1,6 +1,6 @@
 require 'socket'
 require 'uri'
-load 'ServerInstance.rb'
+load './ServerInstance.rb'
 
 @remote_ports = (8888..8892).to_a
 #@remote_ports << 80

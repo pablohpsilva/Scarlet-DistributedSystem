@@ -3,6 +3,8 @@ require 'cgi'
 require 'uri'
 require 'socket'
 
+#Cria as configurações básicas do servidor
+
 class ServerForger
   private
     @default_folder

@@ -30,6 +30,7 @@ class User
       end
     end
 
+    # Pega todos os amigos e tira a lista de amigos dos seus amigos
     def convert_friends( friends_list )
       json_friends_list = []
       if !friends_list.nil?
@@ -62,6 +63,8 @@ class User
       end
     end
 
+    # Transforma o objeto em json
+    # Quando precisar enviar para um usuário
     def to_json
       return {
         'id' => @id,
@@ -77,6 +80,7 @@ class User
       }
     end
 
+    #O http_get usa este método,
     def from_json_file(fileUrl)
       data = JSON.parse( File.read(fileUrl) )
       @first_name = data['first_name']
@@ -91,6 +95,7 @@ class User
       @id = data['id'].nil? ? set_md5_id : data['id']
     end
 
+    #Recebe um json e transforma em usuario
     def from_json_data(data)
       @first_name = data['first_name']
       @last_name = data['last_name']
@@ -104,6 +109,7 @@ class User
       @id = data['id'].nil? ? set_md5_id : data['id']
     end
 
+    # Escrever
     def save_user_on_file
       begin
         folder = @id.chars.first

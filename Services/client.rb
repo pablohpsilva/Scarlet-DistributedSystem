@@ -1,34 +1,68 @@
 require 'socket'      # Sockets are in standard library
 require 'uri'
-		
+require 'digest'
+
 $host = ARGV[0]
 $port = ARGV[1]
 $path = ARGV[2]
-$method = ARGV[3]
-$action = ARGV[4]
-$value = ARGV[5]
-$data = ARGV[6]
+$action = ARGV[3]
+$first_name= ARGV[4]
+$last_name = ARGV[5]
+$email = ARGV[6]
+$age = ARGV[7]
+$gender = ARGV[8]
+$password = ARGV[9]
+$telephone = ARGV[10]
+$interests = ARGV[11]
+$friends = ARGV[12]
 
-if  ARGV.length >= 3
+if  ARGV.length > 3
 	puts $host
 	puts $port
 	puts $path
-	puts $method
 	puts $action
-	puts $value
-	puts $data
+	puts $first_name
+	puts $last_name
+	puts $email
+	puts $age
+	puts $gender
+	puts $password
+	puts $telephone
+	puts $interests
+	puts $friends
+
 	socket = TCPSocket.open($host,$port)  	# Connect to server
 
-	if $data != nil
-		if $data.include?(" ")
-			dat = $data.split.join('%20')
-			puts dat
+	$action = $action.to_s.downcase
+
+	if $action.include?('get')
+		$email = ARGV[4]
+		request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&value="+$email
+	elsif $action.include?('post')
+		puts "Entrou no POST\n"
+		$password = Digest::MD5.hexdigest($password)
+
+		if $friends.nil?
+			request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&first_name="+$first_name+"&last_name="+$last_name+"&email="+$email+"&age="+$age+"&gender="+$gender+"&password="+$password+"&telephone="+$telephone+"&interests="+$interests
 		else
-			dat = $data
+			request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&first_name="+$first_name+"&last_name="+$last_name+"&email="+$email+"&age="+$age+"&gender="+$gender+"&password="+$password+"&telephone="+$telephone+"&interests="+$interests+"&friends="+$friends
 		end
-		request = "http://"+$host+":"+$port+$method +"?acao="+$action+"&value="+$value+"&dado="+dat
+
+	elsif $action.include?('put')
+		$email = ARGV[4]
+		value = ARGV[5]
+		data = ARGV[6]
+		if data.include?(" ")
+				data = data.split.join('%20')
+		end
+		request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&usuario="+$email+"&value="+value+"&dado="+data
+	elsif $action.include?('delete')
+		$email = ARGV[4]
+		value = ARGV[5]
+		data = ARGV[6]
+		request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&usuario="+$email+"&value="+value+"&dado="+data
 	else
-		request = "http://"+$host+":"+$port+$method +"?acao="+$action+"&value="+$value
+		request = "ERROR"
 	end
 
 	socket.print(request)
