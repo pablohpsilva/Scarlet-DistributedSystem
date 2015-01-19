@@ -35,9 +35,12 @@ if  ARGV.length > 3
 
 	$action = $action.to_s.downcase
 
+	#O GET precisa somente do email do usuario que deseja buscar
 	if $action.include?('get')
 		$email = ARGV[4]
 		request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&value="+$email
+
+	# O POST envia todos os dados do novo usuário a ser cadastrado, num primeiro instante a tabela de friends é nula
 	elsif $action.include?('post')
 		puts "Entrou no POST\n"
 		$password = Digest::MD5.hexdigest($password)
@@ -48,6 +51,8 @@ if  ARGV.length > 3
 			request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&first_name="+$first_name+"&last_name="+$last_name+"&email="+$email+"&age="+$age+"&gender="+$gender+"&password="+$password+"&telephone="+$telephone+"&interests="+$interests+"&friends="+$friends
 		end
 
+	# O PUT envia o email, que é o ID do usuario, que deseja buscar para atualizar, enviando o valor igual a interests ou friends
+	# e o dado a ser gravado em interests ou friends;
 	elsif $action.include?('put')
 		$email = ARGV[4]
 		value = ARGV[5]
@@ -56,6 +61,9 @@ if  ARGV.length > 3
 				data = data.split.join('%20')
 		end
 		request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&usuario="+$email+"&value="+value+"&dado="+data
+
+	# O DELETE também envia o email do usuário que desejar, juntamente com o valor igual a interests ou friends
+	# e o dado que deseja deletar
 	elsif $action.include?('delete')
 		$email = ARGV[4]
 		value = ARGV[5]

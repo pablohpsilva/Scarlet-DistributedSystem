@@ -3,6 +3,7 @@ require 'uri'
 require 'json'
 require 'cgi'
 require 'securerandom'
+require 'digest'
 load '../Kernel/ServerStrings.rb'
 load '../Kernel/ServerForger.class.rb'
 
@@ -72,13 +73,13 @@ class Server
     def start(client)
       request_line = client.gets
       STDERR.puts request_line
-      if request_line.include?('get')
+      if request_line.include?('http_get')
         self.http_get(client, request_line)
       elsif request_line.include?('http_post')
         self.http_post(client, request_line)
       elsif request_line.include?('http_put')
         self.http_put(client,request_line)
-      elsif request_line.include?('delete')
+      elsif request_line.include?('http_delete')
         self.http_delete(client,request_line)
       else
         client.print "\nAcao nao encontrada, tente novamente.\n"
@@ -104,11 +105,11 @@ class Server
           respond_error_page(client)
         end
 
-        stack_name = basic_data['values'][1].to_s.downcase.delete "[\"]"
-        path_stack = "../Pilhas/#{stack_name}"
-        puts "Imprimindo a pilha...\n"
-        #message = @stk.displaing(path_stack,stack_name)
-        client.print "\n\n#{message}"
+        # Aqui recupera o email do usuário e converte em seu equivalente MD5 para buscar na tabela correspondente
+        v = basic_data['values'].split
+        ee = v.map{|e| e.gsub(',','')}
+        ee[1] = Digest::MD5.hexdigest(ee[1])
+        get_User = User.new.from_json_data(ee[1])
       end
       client.close
     end
@@ -132,11 +133,16 @@ class Server
           return nil
         end
 
+        # Aqui recupera o email, o nome da tabela, interests ou friends, e o valor a ser gravado
+        # O email é convertido para seu equivalente MD5 para poder buscar pelo usuário na tabela correspondente
         v = basic_data['values'].split
         ee = v.map{|e| e.gsub(',','')}
+        ee[1] = Digest::MD5.hexdigest(ee[1])
+
+        # ee[1] = email
+        # ee[2] = valor ou nome da tabela
+        # ee[3] = valor do dado a ser gravado
         update_User = User.new.from_json_data(ee[1..3])
-        update_User.instance_of?(User)
-        update_User.save_user_on_file
       end
       client.close
     end
@@ -159,11 +165,17 @@ class Server
           respond_error_page(client)
           return nil
         end
-        stack_name = basic_data['values'][1].to_s.downcase.delete "[\"]"
-        path_stack = "../Pilhas/#{stack_name}"
-        puts "Tirando da pilha...\n"
-        #message = @stk.pop_stack(path_stack)
-        client.print message
+
+        # Aqui recupera o email, o nome da tabela, interests ou friends, e o valor a ser removido
+        # O email é convertido para seu equivalente MD5 para poder buscar pelo usuário na tabela correspondente
+        v = basic_data['values'].split
+        ee = v.map{|e| e.gsub(',','')}
+        ee[1] = Digest::MD5.hexdigest(ee[1])
+
+        # ee[1] = email
+        # ee[2] = valor ou nome da tabela
+        # ee[3] = valor do dado a ser removido
+        delete_user_data = User.new.from_json_data(ee[1..3])
       end
       client.close
     end
@@ -189,6 +201,14 @@ class Server
 
         v = basic_data['values'].split
         ee = v.map{|e| e.gsub(',','')}
+        # ee[1] = first_name
+        # ee[2] = last_name
+        # ee[3] = email
+        # ee[4] = age
+        # ee[5] = gender
+        # ee[6] = password
+        # ee[7] = telephone
+        # ee[8] = interests
         new_User = User.new.from_json_data(ee[1..8])
         if new_User.instance_of?(User)
           new_User.save_user_on_file
