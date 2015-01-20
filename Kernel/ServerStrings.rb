@@ -4,9 +4,9 @@ class ServerStrings
     def using_scarlet
       aux = "\nHello... This is Scarlet, the server. How do you do?"
       aux += 'Look, this is how you should use me: '
-      aux += "\n\t Usage: ruby server.rb [conf.json ,[FOLDER, PORT]]"
+      aux += "\n\t Usage: ruby server.rb [conf2.json ,[FOLDER, PORT]]"
       aux += "\nHere, take a look at these examples:"
-      aux += "\t $ruby server.rb conf.json"
+      aux += "\t $ruby server.rb conf2.json"
       aux += "\t $ruby server.rb \".\/public\" 8888 "
       aux += "\nGot it? Great! Please, try again.\n\n"
       return aux

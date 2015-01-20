@@ -1,11 +1,21 @@
 require 'json'
+require 'cgi'
+require 'uri'
+require 'socket'
+
+#Cria as configurações básicas do servidor
 
 class ServerForger
-  public
+  private
+    @default_folder
+    @default_json
     @server_config = {}
 
-    def initialize(folderOrJson = nil, port = nil)
-      load_server(folderOrJson, port)
+  public
+    def initialize(address = 'localhost', port = nil)
+      @default_folder = '../app/'
+      @default_json = 'conf.json'
+      load_server(address, port)
     end
 
 
@@ -13,21 +23,21 @@ class ServerForger
       return @server_config
     end
 
-    def load_server(folderOrJson=nil, port=nil)
-      set_server(folderOrJson, port)
+    def load_server(address = 'localhost', port = nil)
+      set_server(address, port)
       set_server_defaults
     end
 
-    def set_server (folderOrJson=nil, port=nil)
-      if !File.directory?(folderOrJson) && File.exist?(folderOrJson)
-        @server_config = JSON.parse( File.read(folderOrJson) )
+    def set_server (address = 'localhost', port = nil)
+      if !File.directory?(@default_json) && File.exist?(@default_json)
+        @server_config = JSON.parse( File.read(@default_json) )
 
-      elsif File.directory?(folderOrJson) && port
+      elsif File.directory?(@default_folder) && port
         @server_config = {
-            'domain'   => 'localhost',
+            'domain'   => address,
             'port'     => port,
             # Files will be served from this directory
-            'root_folder' => folderOrJson
+            'root_folder' => @default_folder
         }
       end
     end
@@ -43,8 +53,9 @@ class ServerForger
     # This helper function parses the Request-Line and
     # generates a path to a file on the server.
     def requested_file(request_line)
-      request_uri  = request_line.split(' ')[1]
-      path         = URI.unescape(URI(request_uri).path)
+      #request_uri  = request_line.split(' ')[1]
+      #puts "request_uri #{request_uri}\n"
+      path         = URI.unescape(URI(request_line).path)
 
       clean = []
 

@@ -1,3 +1,5 @@
+load 'Services/ServerInstance.rb'
+=begin
 load 'Services/Server.class.rb'
 
 def main
@@ -5,7 +7,7 @@ def main
 
   puts 'Scarlet load balancer is running...'
 
-  server1 = Server.new('albert','./Services/conf.json')
+  server1 = Server.new('albert','./Services/conf2.json')
   loop do
     #Server will accept a request
     Thread.start(server.accept) do |client|
@@ -21,3 +23,19 @@ def main
 end
 
 main
+=end
+
+puts 'Started...\n'
+@remote_ports = (8888..8889).to_a
+@remote_hosts = %w(localhost localhost localhost localhost localhost localhost)
+
+puts @remote_hosts.length
+
+@remote_ports.length.times do |i|
+  Thread.new {
+    puts "server #{i}"
+    Server_Instance.new(@remote_ports[i])
+  }
+end
+
+gets

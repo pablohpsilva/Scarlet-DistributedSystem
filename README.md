@@ -5,11 +5,11 @@ A server in ruby.
 
 ## How to use
 ```sh
-  $ ruby server.rb {[[conf.json],[folder_with_html,port]]}
+  $ ruby server.rb {[[conf2.json],[folder_with_html,port]]}
 ```
 Example:
 ```sh
-  $ ruby server.rb conf.json
+  $ ruby server.rb conf2.json
 ```
 Or
 ```sh
