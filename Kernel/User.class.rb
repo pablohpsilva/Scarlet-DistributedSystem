@@ -117,11 +117,10 @@ class User
           Dir.mkdir(@id.chars.first)
         end
         file = File.open("#{folder}/#{@id}.json", 'w+')
-        file.write(user_to_json.to_json)
+        file.write( JSON.pretty_generate( self.user_to_json ) )
+        file.close
       rescue IOError => e
         throw e
-      ensure
-        file.close unless file == nil
       end
     end
 

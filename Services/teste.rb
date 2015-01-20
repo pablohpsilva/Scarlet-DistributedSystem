@@ -37,11 +37,11 @@ alfreds = '{"id"=>"d855f08e9b9af1509bc84ff3cddf31c2", "first_name"=>"alfredo", "
 puts luks
 puts alfredo.user_to_json
 
-joao.from_json_file('user.json')
-joao.friends = [alfredo]
-puts joao.inspect
+# joao.from_json_file('user.json')
+# joao.friends = [alfredo]
+# puts joao.inspect
 
 new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], nil)
 
-puts new_User.user_to_json
+puts JSON.pretty_generate( new_User.user_to_json )
 # joao.save_user_on_file
