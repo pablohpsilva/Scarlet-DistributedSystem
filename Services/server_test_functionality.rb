@@ -11,6 +11,7 @@ def main
   loop do
     Thread.start(server.accept) do |client|
       puts client.inspect
+      puts 'aqui'
       @server_instance.start(client, client.gets)
     end
   end

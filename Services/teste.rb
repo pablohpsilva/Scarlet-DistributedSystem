@@ -35,7 +35,8 @@ gata.friends = [alfredo]
 alfreds = '{"id"=>"d855f08e9b9af1509bc84ff3cddf31c2", "first_name"=>"alfredo", "last_name"=>"gomes", "email"=>"a@a.c", "age"=>21, "gender"=>"M", "password"=>"graveto", "telephone"=>"3432102954", "interests"=>["mulheres", "carros", "bolsa"], "friends"=>[]}'
 
 puts luks
-puts alfredo.user_to_json
+# puts alfredo.user_to_json
+puts JSON.pretty_generate( alfredo.user_to_json )
 
 # joao.from_json_file('user.json')
 # joao.friends = [alfredo]
@@ -43,5 +44,40 @@ puts alfredo.user_to_json
 
 new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], nil)
 
-puts JSON.pretty_generate( new_User.user_to_json )
+# puts JSON.pretty_generate( new_User.user_to_json )
 # joao.save_user_on_file
+
+@interval = '0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,y,z,w'.split(',')
+@ports = [8888, 8889, 8890, 8891]
+@addresses = 'localhost,localhost,localhost,localhost'.split(',')
+
+# @interval2 = @interval.clone
+# @interval2 << 'bitch'
+#
+# @database_map = {}
+# @counter = 0
+# @index = 0
+# @interval.each do |elem|
+#   if @counter < 9
+#     @database_map[elem] = [@addresses[@index], @ports[@index]]
+#   else
+#     @counter = -1
+#     @index += 1
+#   end
+#   @counter += 1
+# end
+
+puts @database_map.inspect
+# puts @interval.length
+# puts @ports.length
+# puts @addresses.length
+# @addresses.each do |element|
+#
+# end
+
+
+database_manager = DatabaseManager.new
+puts database_manager.find_user_data('abc')
+
+#it works, damn it!
+teste = database_manager.clone

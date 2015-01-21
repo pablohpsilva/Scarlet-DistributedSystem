@@ -1,11 +1,42 @@
 require 'socket'
 require 'uri'
+load '../Kernel/Server.class.rb'
+load '../Services/DatabaseManager.rb'
 
 remote_host = 'localhost'
 remote_port = 8888
 listen_port = 8081
 max_threads = 5
 threads = []
+database_manager = DatabaseManager.new
+
+# @interval = '0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,y,z,w'.split(',')
+# @ports = [8888, 8889, 8890, 8891]
+# @addresses = 'localhost,localhost,localhost,localhost'.split(',')
+#
+# @database_map = {}
+# @counter = 0
+# @index = 0
+# @interval.each do |elem|
+#   if @counter < 9
+#     @database_map[elem] = [@addresses[@index], @ports[@index]]
+#   else
+#     @counter = -1
+#     @index += 1
+#   end
+#   @counter += 1
+# end
+
+# @counter = 0
+# until @counter > @addresses.length  do
+#   # puts("Inside the loop i = #$i" )
+#   # $i +=1;
+#   Thread.new {
+#     @aux = Server.new(@ports[@counter],@addresses[@counter])
+#     puts @aux.get_name
+#   }
+#   @counter += 1
+# end
 
 puts 'starting server'
 server = TCPServer.new(nil, listen_port)
