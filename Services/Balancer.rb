@@ -1,5 +1,8 @@
 require 'socket'
+require 'cgi'
 require 'uri'
+require 'securerandom'
+require 'digest'
 load '../Kernel/Server.class.rb'
 load '../Services/DatabaseManager.rb'
 
@@ -9,34 +12,6 @@ listen_port = 8081
 max_threads = 5
 threads = []
 database_manager = DatabaseManager.new
-
-# @interval = '0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,y,z,w'.split(',')
-# @ports = [8888, 8889, 8890, 8891]
-# @addresses = 'localhost,localhost,localhost,localhost'.split(',')
-#
-# @database_map = {}
-# @counter = 0
-# @index = 0
-# @interval.each do |elem|
-#   if @counter < 9
-#     @database_map[elem] = [@addresses[@index], @ports[@index]]
-#   else
-#     @counter = -1
-#     @index += 1
-#   end
-#   @counter += 1
-# end
-
-# @counter = 0
-# until @counter > @addresses.length  do
-#   # puts("Inside the loop i = #$i" )
-#   # $i +=1;
-#   Thread.new {
-#     @aux = Server.new(@ports[@counter],@addresses[@counter])
-#     puts @aux.get_name
-#   }
-#   @counter += 1
-# end
 
 puts 'starting server'
 server = TCPServer.new(nil, listen_port)
@@ -48,7 +23,17 @@ server = TCPServer.new(nil, listen_port)
       begin
         puts "#{Thread.current}: got a client connection"
         begin
+          # client_aux = client_socket.dup
+          # client_aux = client_socket.dup
+          reading = client_socket.recv( 100 )
+          # reading = client_socket.gets
+          u = URI.parse(reading.split(' ')[1])
+          values = CGI.parse(u.query).values
+          remote = database_manager.find_user_data( Digest::MD5.hexdigest(values[0][0]) )
+          remote_host = remote[0]
+          remote_port = remote[1]
           server_socket = TCPSocket.new(remote_host, remote_port)
+          server_socket.puts reading
         rescue Errno::ECONNREFUSED
           client_socket.close
           raise
