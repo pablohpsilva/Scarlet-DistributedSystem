@@ -16,7 +16,13 @@ $telephone = ARGV[10]
 $interests = ARGV[11]
 $friends = ARGV[12]
 
-if  ARGV.length > 3
+# $host = 'localhost'
+# $port = '8888'
+# $path = '/index.html'
+# $action = 'get'
+# $email = 'a@a.c'
+
+#if  ARGV.length > 3
 	puts $host
 	puts $port
 	puts $path
@@ -39,7 +45,7 @@ if  ARGV.length > 3
 	if $action.include?('get')
 		$email = ARGV[4]
 		#GET /index.html?acao=oi&valor=ola HTTP/1.1
-		request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&value="+$email
+		request = "GET "+$path+"?value="+$email+" HTTP/1.1"
 
 	# O POST envia todos os dados do novo usuário a ser cadastrado, num primeiro instante a tabela de friends é nula
 	elsif $action.include?('post')
@@ -47,9 +53,9 @@ if  ARGV.length > 3
 		$password = Digest::MD5.hexdigest($password)
 
 		if $friends.nil?
-			request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&first_name="+$first_name+"&last_name="+$last_name+"&email="+$email+"&age="+$age+"&gender="+$gender+"&password="+$password+"&telephone="+$telephone+"&interests="+$interests
+			request = 'POST '+$path+'?first_name='+$first_name+'&last_name='+$last_name+'&email='+$email+'&age='+$age+'&gender='+$gender+'&password='+$password+'&telephone='+$telephone+'&interests='+$interests+' HTTP/1.1'
 		else
-			request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&first_name="+$first_name+"&last_name="+$last_name+"&email="+$email+"&age="+$age+"&gender="+$gender+"&password="+$password+"&telephone="+$telephone+"&interests="+$interests+"&friends="+$friends
+			request = 'POST '+$path+'?first_name='+$first_name+'&last_name='+$last_name+'&email='+$email+'&age='+$age+'&gender='+$gender+'&password='+$password+'&telephone='+$telephone+'&interests='+$interests+'&friends='+$friends+' HTTP/1.1'
 		end
 
 	# O PUT envia o email, que é o ID do usuario, que deseja buscar para atualizar, enviando o valor igual a interests ou friends
@@ -61,7 +67,7 @@ if  ARGV.length > 3
 		if data.include?(" ")
 				data = data.split.join('%20')
 		end
-		request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&usuario="+$email+"&value="+value+"&dado="+data
+		request = 'PUT '+$path+'?usuario='+$email+'&value='+value+'&dado='+data
 
 	# O DELETE também envia o email do usuário que desejar, juntamente com o valor igual a interests ou friends
 	# e o dado que deseja deletar
@@ -69,21 +75,21 @@ if  ARGV.length > 3
 		$email = ARGV[4]
 		value = ARGV[5]
 		data = ARGV[6]
-		request = "http://"+$host+":"+$port+$path+"?acao="+$action+"&usuario="+$email+"&value="+value+"&dado="+data
+		request = 'DELETE '+$path+'?usuario='+$email+'&value='+value+'&dado='+data
 	else
-		request = "ERROR"
+		request = "ERROR\n"
 	end
 
 	puts request
 	socket.print(request)
 	puts "Mensagem enviada\n"
-	response = socket.read              	# Read complete response
-	puts "Leu resposta\n"
-	headers, body = response.split("\r\n\r\n", 2)
-	print headers
-	print "\n\n"
-	print body                 	# And display it
+	# response = socket.read              	# Read complete response
+	# puts "Leu resposta\n"
+	# headers, body = response.split("\r\n\r\n", 2)
+	# print headers
+	# print "\n\n"
+	# print body                 	# And display it
 
-else
-  print "Nope. Try again \n"
-end
+# else
+#   print "Nope. Try again \n"
+# end

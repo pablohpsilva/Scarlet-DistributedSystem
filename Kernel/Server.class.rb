@@ -98,52 +98,65 @@ class Server
       get_User.get_user_on_file(md5)
 
       message = get_User.user_to_json.to_json
-      client.print @server_strings.http_200_ok(message.length, 'text/json')
-      client.print message
+      client.puts(@server_strings.http_200_ok(message.length, 'text/json'))
+      client.puts(message)
+      # client.print @server_strings.http_200_ok(message.length, 'text/json')
+      # client.print message
     end
 
     def http_put(client, request_line)
       basic_data = http_basics(request_line)
 
-      # Aqui recupera o email, o nome da tabela, interests ou friends, e o valor a ser gravado
-      # O email é convertido para seu equivalente MD5 para poder buscar pelo usuário na tabela correspondente
       v = basic_data['values'].split
-      ee = v.map{|e| e.gsub(',','')}
-      ee[1] = Digest::MD5.hexdigest(ee[1])
-      update_User = User.new.from_json_data(ee[1..3])
+      v[0] = Digest::MD5.hexdigest(v[0].gsub(',',''))
+      update_User = User.new
+      if v[1].gsub(',','').eql?('friends')
+        update_User.get_user_on_file(v[0])
+        friends = update_User.friends
+        if friends.eql?([])
+          update_User.friends = Digest::MD5.hexdigest(v[2]).split
+        else
+          update_User.friends = [friends+', '+Digest::MD5.hexdigest(v[2])]
+        end
+        update_User.save_user_on_file
+      elsif v[1].gsub(',','').eql?('interests')
+        update_User.get_user_on_file(v[0])
+        interests = update_User.interests
+        if interests.eql?([])
+          update_User.interests = [v[2]]
+        else
+          update_User.interests = [interests+', '+v[2]]
+        end
+        update_User.save_user_on_file
+      end
     end
 
     def http_delete(client, request_line)
       basic_data = http_basics(request_line)
 
-      if @server_config.get_server['root_page'] != 'index.html' && path == @server_config.get_server['root_folder']
-        load_default_page(client)
-
-      else
-        path = File.join(basic_data['path'], @server_config.get_server['root_page']) if File.directory?(basic_data['path'])
-
-        # Make sure the file exists and is not a directory
-        # before attempting to open it.
-        if File.exist?(path) && !File.directory?(path)
-          puts "IF\n"
-          process_file(path, client)
+      v = basic_data['values'].split
+      v[0] = Digest::MD5.hexdigest(v[0].gsub(',',''))
+      delete_user_data = User.new
+      if v[1].gsub(',','').eql?('friends')
+        delete_user_data.get_user_on_file(v[0])
+        if delete_user_data.friends.eql?([])
+          client.print "Nao ha amigos em sua lista de amigos!\n"
         else
-          respond_error_page(client)
-          return nil
+          delete_user_data.friends.delete(Digest::MD5.hexdigest(v[2]))
         end
-
-        # Aqui recupera o email, o nome da tabela, interests ou friends, e o valor a ser removido
-        # O email é convertido para seu equivalente MD5 para poder buscar pelo usuário na tabela correspondente
-        v = basic_data['values'].split
-        ee = v.map{|e| e.gsub(',','')}
-        ee[1] = Digest::MD5.hexdigest(ee[1])
-
-        # ee[1] = email
-        # ee[2] = valor ou nome da tabela
-        # ee[3] = valor do dado a ser removido
-        delete_user_data = User.new.from_json_data(ee[1..3])
+        delete_user_data.save_user_on_file
+      elsif v[1].gsub(',','').eql?('interests')
+        delete_user_data.get_user_on_file(v[0])
+        if delete_user_data.interests.eql?([])
+          client.puts "Nao ha interesses em sua lista de interesses!\n"
+        else
+          interests = delete_user_data.interests.to_s.gsub(v[2],'')
+          delete_user_data.interests = interests.split
+          puts delete_user_data.interests
+          puts interests
+        end
+        delete_user_data.save_user_on_file
       end
-      client.close
     end
 
     # Esse metodo e usado para salvar um dado
@@ -151,14 +164,12 @@ class Server
       basic_data = http_basics(request_line)
 
       v = basic_data['values'].split
-      # ee = v.map{|e| e.gsub(',','')}
-      puts v.inspect
-      ee = v.map{|e| e.gsub(',','')}
-      new_User = User.new(ee[0], ee[1], ee[2], ee[3], ee[4], ee[5], ee[6], ee[7])
-      new_User.interests = [new_User.interests]
-      # new_User User.new
+      new_User = User.new(v[0].gsub(',',''), v[1].gsub(',',''), v[2].gsub(',',''), v[3].gsub(',',''), v[4].gsub(',',''), v[5].gsub(',',''), v[6].gsub(',',''), v[7])
+      #new_User.interests = [new_User.interests]
+      #new_User User.new
 
-      # new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], nil)
+      #new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], ['Pablo', 'Nayara'])
+      #new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], nil)
       if new_User.instance_of?(User)
         new_User.save_user_on_file
       end

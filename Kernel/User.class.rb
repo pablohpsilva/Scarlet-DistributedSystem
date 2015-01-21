@@ -39,8 +39,9 @@ class User
             index.friends = []
             json_friends_list << ( index.user_to_json )
           else
-            index['friends'] = []
-            json_friends_list << ( User.new.from_json_data(index) )
+            # puts index['friends']
+            index.friends = [index]
+            json_friends_list = ( User.new.from_json_data(index) )
           end
         end
       end
