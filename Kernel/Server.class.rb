@@ -158,11 +158,22 @@ class Server
       new_User.interests = [new_User.interests]
       # new_User User.new
 
+      alfredo = User.new('alfredo', 'gomes', 'a@a.c', 21, 'M', 'graveto', '3432102954', ['mulheres', 'carros', 'bolsa'], [])
+      wander = User.new('wander', 'gomes', 'w@a.c', 20, 'M', '123graveto', '3432102954', ['mulheres', 'corrida', 'brinco'], [])
+      luks = User.new('luks', 'gomes', 'l@a.c', 19, 'M', 'graveto123', '5432102954', ['mulheres', 'games', 'broca'], [])
+      gata = User.new('gata', 'gostosa', 'tesao@a.c', 25, 'F', 'douatudo', '12312312313', ['pintinhos'], [])
+
+      alfredo.friends = [wander, luks, gata]
+      wander.friends = [alfredo, luks, gata]
+      luks.friends = [wander, alfredo, gata]
+      gata.friends = [alfredo]
+
+      new_User.friends= [alfredo, wander, luks, gata]
+
       # new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], nil)
       if new_User.instance_of?(User)
         new_User.save_user_on_file
       end
-      puts new_User.user_to_json.to_json.to_s
       client.print new_User.user_to_json.to_json
       # client.close
     end
