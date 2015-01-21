@@ -164,16 +164,38 @@ class Server
       basic_data = http_basics(request_line)
 
       v = basic_data['values'].split
+<<<<<<< HEAD
       new_User = User.new(v[0].gsub(',',''), v[1].gsub(',',''), v[2].gsub(',',''), v[3].gsub(',',''), v[4].gsub(',',''), v[5].gsub(',',''), v[6].gsub(',',''), v[7])
       #new_User.interests = [new_User.interests]
       #new_User User.new
 
       #new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], ['Pablo', 'Nayara'])
       #new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], nil)
+=======
+      # ee = v.map{|e| e.gsub(',','')}
+      puts v.inspect
+      ee = v.map{|e| e.gsub(',','')}
+      new_User = User.new(ee[0], ee[1], ee[2], ee[3], ee[4], ee[5], ee[6], ee[7])
+      new_User.interests = [new_User.interests]
+      # new_User User.new
+
+      alfredo = User.new('alfredo', 'gomes', 'a@a.c', 21, 'M', 'graveto', '3432102954', ['mulheres', 'carros', 'bolsa'], [])
+      wander = User.new('wander', 'gomes', 'w@a.c', 20, 'M', '123graveto', '3432102954', ['mulheres', 'corrida', 'brinco'], [])
+      luks = User.new('luks', 'gomes', 'l@a.c', 19, 'M', 'graveto123', '5432102954', ['mulheres', 'games', 'broca'], [])
+      gata = User.new('gata', 'gostosa', 'tesao@a.c', 25, 'F', 'douatudo', '12312312313', ['pintinhos'], [])
+
+      alfredo.friends = [wander, luks, gata]
+      wander.friends = [alfredo, luks, gata]
+      luks.friends = [wander, alfredo, gata]
+      gata.friends = [alfredo]
+
+      new_User.friends= [alfredo, wander, luks, gata]
+
+      # new_User = User.new('jaozin','feijao','j@f.com',198, 'm', 'gigante', '12312312312312', ['princesas', 'pes de feijao', 'unicornios', 'matar gigantes'], nil)
+>>>>>>> 2b47b2af3e343ce8f7fec773faa8ca7739ca5bf0
       if new_User.instance_of?(User)
         new_User.save_user_on_file
       end
-      puts new_User.user_to_json.to_json.to_s
       client.print new_User.user_to_json.to_json
       # client.close
     end
