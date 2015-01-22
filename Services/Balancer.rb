@@ -1,11 +1,17 @@
 require 'socket'
+require 'cgi'
 require 'uri'
+require 'securerandom'
+require 'digest'
+load '../Kernel/Server.class.rb'
+load '../Services/DatabaseManager.rb'
 
 remote_host = 'localhost'
 remote_port = 8888
 listen_port = 8081
 max_threads = 5
 threads = []
+database_manager = DatabaseManager.new
 
 puts 'starting server'
 server = TCPServer.new(nil, listen_port)
@@ -17,6 +23,15 @@ server = TCPServer.new(nil, listen_port)
       begin
         puts "#{Thread.current}: got a client connection"
         begin
+          # client_aux = client_socket.dup
+          # client_aux = client_socket.dup
+          reading = client_socket.recv( 100 )
+          # reading = client_socket.gets
+          u = URI.parse(reading.split(' ')[1])
+          values = CGI.parse(u.query).values
+          remote = database_manager.find_user_data( Digest::MD5.hexdigest(values[0][0]) )
+          remote_host = remote[0]
+          remote_port = remote[1]
           server_socket = TCPSocket.new(remote_host, remote_port)
         rescue Errno::ECONNREFUSED
           client_socket.close

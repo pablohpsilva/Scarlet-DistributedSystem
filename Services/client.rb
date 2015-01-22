@@ -22,7 +22,7 @@ $friends = ARGV[12]
 # $action = 'get'
 # $email = 'a@a.c'
 
-#if  ARGV.length > 3
+if  ARGV.length > 3
 	puts $host
 	puts $port
 	puts $path
@@ -44,7 +44,6 @@ $friends = ARGV[12]
 	#O GET precisa somente do email do usuario que deseja buscar
 	if $action.include?('get')
 		$email = ARGV[4]
-		#GET /index.html?acao=oi&valor=ola HTTP/1.1
 		request = "GET "+$path+"?value="+$email+" HTTP/1.1"
 
 	# O POST envia todos os dados do novo usuário a ser cadastrado, num primeiro instante a tabela de friends é nula
@@ -80,16 +79,13 @@ $friends = ARGV[12]
 		request = "ERROR\n"
 	end
 
-	puts request
 	socket.print(request)
-	puts "Mensagem enviada\n"
 	# response = socket.read              	# Read complete response
-	# puts "Leu resposta\n"
 	# headers, body = response.split("\r\n\r\n", 2)
 	# print headers
 	# print "\n\n"
 	# print body                 	# And display it
 
-# else
-#   print "Nope. Try again \n"
-# end
+else
+  print "Nope. Try again \n"
+end

@@ -34,14 +34,18 @@ class User
     def convert_friends( friends_list )
       json_friends_list = []
       if !friends_list.nil?
-        friends_list.each do |index|
-          if index.instance_of?(User)
-            index.friends = []
-            json_friends_list << ( index.user_to_json )
+        friends_list.each do |elem|
+          puts elem.class
+          if elem.instance_of?(Hash)
+            elem['friends'] = []
+            json_friends_list << ( User.new.from_json_data(elem) )
+          elsif elem.instance_of?(String)
+            json_friends_list << (elem)
+          elsif elem.instance_of?(User)
+              elem.friends = []
+              json_friends_list << ( elem.user_to_json )
           else
-            # puts index['friends']
-            index.friends = [index]
-            json_friends_list = ( User.new.from_json_data(index) )
+            throw NotImplementedError
           end
         end
       end
@@ -118,11 +122,10 @@ class User
           Dir.mkdir(@id.chars.first)
         end
         file = File.open("#{folder}/#{@id}.json", 'w+')
-        file.write(user_to_json.to_json)
+        file.write( JSON.pretty_generate( self.user_to_json ) )
+        file.close
       rescue IOError => e
         throw e
-      ensure
-        file.close unless file == nil
       end
     end
 
@@ -131,7 +134,6 @@ class User
       folder = md5_email.chars.first
       file = File.read("#{folder}/#{md5_email}.json")
       from_json_data( JSON.parse( file ) )
-      return
       # rescue IOError => e
       #   throw e
       # ensure
