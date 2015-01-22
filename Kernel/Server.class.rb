@@ -40,7 +40,6 @@ class Server
       response = @server_strings.http_400_error(message.size)
       client.print response
       client.print message
-      #return get_answer(message,response)
     end
 
     def http_basics(request_line)
@@ -73,7 +72,6 @@ class Server
       @server_name
     end
 
-
     def start(client, request)
       request_line = request.split(' ')
       STDERR.puts request_line
@@ -89,7 +87,6 @@ class Server
       else
         client.print "\nAcao nao encontrada, tente novamente.\n"
       end
-
       client.close
     end
 
@@ -105,8 +102,6 @@ class Server
       message = get_User.user_to_json.to_json
       client.puts(@server_strings.http_200_ok(message.length, 'text/json'))
       client.puts(message)
-      # client.print @server_strings.http_200_ok(message.length, 'text/json')
-      # client.print message
     end
 
     def http_put(client, request_line)
@@ -115,15 +110,13 @@ class Server
       v = basic_data['values'].split
       v[0] = do_MD5(v[0].gsub(',',''))
       update_User = User.new
-      new_friend = User.new
       if v[1].gsub(',','').eql?('friends')
         update_User.get_user_on_file(v[0])
-        new_friend.get_user_on_file(do_MD5(v[2]))
         friends = update_User.friends
         if friends.eql?([])
-          update_User.friends = [new_friend.id]
+          update_User.friends = [do_MD5(v[2])]
         else
-          update_User.friends = friends.push(do_MD5(new_friend.email))
+          update_User.friends = friends.push(do_MD5(v[2]))
         end
         update_User.save_user_on_file
       elsif v[1].gsub(',','').eql?('interests')
@@ -132,9 +125,11 @@ class Server
         if interests.eql?([])
           update_User.interests = [v[2]]
         else
-          update_User.interests = [interests+', '+v[2]]
+          update_User.interests = interests.push(v[2])
         end
         update_User.save_user_on_file
+      else
+
       end
     end
 
@@ -149,7 +144,9 @@ class Server
         if delete_user_data.friends.eql?([])
           client.print "Nao ha amigos em sua lista de amigos!\n"
         else
-          delete_user_data.friends.delete(do_MD5(v[2]))
+          friends = delete_user_data.friends.to_s.gsub(do_MD5(v[2]),'').delete("[\"]")
+          delete_user_data.friends = friends.gsub(',','').split
+          puts delete_user_data.friends
         end
         delete_user_data.save_user_on_file
       elsif v[1].gsub(',','').eql?('interests')
@@ -157,10 +154,9 @@ class Server
         if delete_user_data.interests.eql?([])
           client.puts "Nao ha interesses em sua lista de interesses!\n"
         else
-          interests = delete_user_data.interests.to_s.gsub(v[2],'')
+          interests = delete_user_data.interests.to_s.gsub(v[2],'').delete("[\"]").gsub(',','')
           delete_user_data.interests = interests.split
           puts delete_user_data.interests
-          puts interests
         end
         delete_user_data.save_user_on_file
       end
