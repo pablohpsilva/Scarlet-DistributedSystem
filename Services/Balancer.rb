@@ -25,7 +25,7 @@ server = TCPServer.new(nil, listen_port)
         begin
           # client_aux = client_socket.dup
           # client_aux = client_socket.dup
-          reading = client_socket.recv( 100 )
+          reading = client_socket.recv( 1000 )
           # reading = client_socket.gets
           u = URI.parse(reading.split(' ')[1])
           values = CGI.parse(u.query).values
@@ -33,6 +33,7 @@ server = TCPServer.new(nil, listen_port)
           remote_host = remote[0]
           remote_port = remote[1]
           server_socket = TCPSocket.new(remote_host, remote_port)
+          server_socket.puts reading
         rescue Errno::ECONNREFUSED
           client_socket.close
           raise

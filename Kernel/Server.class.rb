@@ -95,9 +95,9 @@ class Server
       basic_data = http_basics(request_line)
 
       v = basic_data['values'].split
-      md5 = Digest::MD5.hexdigest(v[0])
+      email_md5 = do_MD5(v[0])
       get_User = User.new
-      get_User.get_user_on_file(md5)
+      get_User.get_user_on_file(email_md5)
 
       message = get_User.user_to_json.to_json
       client.puts(@server_strings.http_200_ok(message.length, 'text/json'))
