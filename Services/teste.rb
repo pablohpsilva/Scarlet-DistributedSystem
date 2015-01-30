@@ -12,7 +12,7 @@ end
 puts @interval.length
 
 puts Digest::MD5.hexdigest("Hello World")
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 #@teste = DatabaseManager.new([ ['localhost', 8888], ['localhost', 8889], ['localhost', 8890], ['localhost', 8891] ])
 
 @us = User.new

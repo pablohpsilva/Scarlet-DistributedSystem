@@ -80,11 +80,14 @@ if  ARGV.length > 3
 	end
 
 	socket.print(request)
-	# response = socket.read              	# Read complete response
+	#response = socket.read              	# Read complete response
+	#response = socket.recv( 100000 )
+	# response = socket.gets
 	# headers, body = response.split("\r\n\r\n", 2)
 	# print headers
 	# print "\n\n"
 	# print body                 	# And display it
+	puts "Foi\n"
 
 else
   print "Nope. Try again \n"

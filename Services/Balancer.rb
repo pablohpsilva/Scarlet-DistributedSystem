@@ -23,17 +23,20 @@ server = TCPServer.new(nil, listen_port)
       begin
         puts "#{Thread.current}: got a client connection"
         begin
-          # client_aux = client_socket.dup
-          # client_aux = client_socket.dup
           reading = client_socket.recv( 1000 )
-          # reading = client_socket.gets
-          u = URI.parse(reading.split(' ')[1])
-          values = CGI.parse(u.query).values
-          remote = database_manager.find_user_data( Digest::MD5.hexdigest(values[0][0]) )
-          remote_host = remote[0]
-          remote_port = remote[1]
-          server_socket = TCPSocket.new(remote_host, remote_port)
-          server_socket.puts reading
+          puts Thread.current
+          if !reading.eql?('')
+            r = reading.split
+            values = CGI.parse(r[1]).values
+            remote = database_manager.find_user_data( Digest::MD5.hexdigest(values[0][0]) )
+            remote_host = remote[0]
+            remote_port = remote[1]
+            server_socket = TCPSocket.new(remote_host, remote_port)
+            server_socket.puts reading
+          else
+            puts Thread.current
+            Thread.kill(Thread.current)
+          end
         rescue Errno::ECONNREFUSED
           client_socket.close
           raise

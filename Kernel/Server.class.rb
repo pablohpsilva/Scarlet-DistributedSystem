@@ -112,21 +112,11 @@ class Server
       update_User = User.new
       if v[1].gsub(',','').eql?('friends')
         update_User.get_user_on_file(v[0])
-        friends = update_User.friends
-        if friends.eql?([])
-          update_User.friends = [do_MD5(v[2])]
-        else
-          update_User.friends = friends.push(do_MD5(v[2]))
-        end
+        update_User.friends.push(do_MD5(v[2]))
         update_User.save_user_on_file
       elsif v[1].gsub(',','').eql?('interests')
         update_User.get_user_on_file(v[0])
-        interests = update_User.interests
-        if interests.eql?([])
-          update_User.interests = [v[2]]
-        else
-          update_User.interests = interests.push(v[2])
-        end
+        update_User.interests.push(v[2])
         update_User.save_user_on_file
       else
 
