@@ -36,28 +36,28 @@ Example:
 
 PUT request
 ```sh
-  $ ruby client.rb "host" port "path" action column value
+  $ ruby client.rb "host" port "path" action email column value
 ```
 Example:
 ```sh
-  $ ruby client.rb "localhost" 8888 "/index.html" put friends usuario2@ufu.br
+  $ ruby client.rb "localhost" 8888 "/index.html" put usuario@ufu.br friends usuario2@ufu.br
 ```
 OR
 ```sh
-  $ ruby client.rb "localhost" 8888 "/index.html" put interests "Skate"
+  $ ruby client.rb "localhost" 8888 "/index.html" put usuario@ufu.br interests "Skate"
 ```
 
 DELETE request
 ```sh
-  $ ruby client.rb "host" port "path" action column value
+  $ ruby client.rb "host" port "path" action email column value
 ```
 Example:
 ```sh
-  $ ruby client.rb "localhost" 8888 "/index.html" delete friends usuario2@ufu.br
+  $ ruby client.rb "localhost" 8888 "/index.html" delete usuario@ufu.br friends usuario2@ufu.br
 ```
 OR
 ```sh
-  $ ruby client.rb "localhost" 8888 "/index.html" delete interests "Skate"
+  $ ruby client.rb "localhost" 8888 "/index.html" delete usuario@ufu.br interests "Skate"
 ```
 
 ## IDE and basic configurations
