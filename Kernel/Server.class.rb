@@ -100,8 +100,8 @@ class Server
       get_User.get_user_on_file(email_md5)
 
       message = get_User.user_to_json.to_json
-      client.puts(@server_strings.http_200_ok(message.length, 'text/json'))
       client.puts(message)
+      client.puts(@server_strings.http_200_ok(message.length, 'text/json'))
     end
 
     def http_put(client, request_line)
@@ -149,6 +149,14 @@ class Server
           puts delete_user_data.interests
         end
         delete_user_data.save_user_on_file
+      elsif v[1].gsub(',','').eql?('user')
+        delete_user_data.get_user_on_file(v[0])
+        if delete_user_data.nil?
+          client.print "Nao ha usuario com este email"
+        else
+          delete_user_data.delete_user(v[0])
+        end
+
       end
     end
 

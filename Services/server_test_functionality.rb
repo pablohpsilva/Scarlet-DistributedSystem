@@ -3,8 +3,11 @@ require 'uri'
 require 'timeout'
 load '../Kernel/Server.class.rb'
 
-$host = ARGV[0]
-$port = ARGV[1]
+# $host = ARGV[0]
+# $port = ARGV[1]
+
+$host = "localhost"
+$port = "8889"
 
 @server_instance = Server.new($port)
 

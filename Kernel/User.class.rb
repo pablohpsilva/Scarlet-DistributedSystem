@@ -140,4 +140,9 @@ class User
       #   file.close unless file == nil
       # end
     end
+
+    def delete_user(md5_email)
+      folder = md5_email.chars.first
+      File.delete("#{folder}/#{md5_email}.json")
+    end
 end

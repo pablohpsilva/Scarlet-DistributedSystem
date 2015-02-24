@@ -16,12 +16,6 @@ $telephone = ARGV[10]
 $interests = ARGV[11]
 $friends = ARGV[12]
 
-# $host = 'localhost'
-# $port = '8888'
-# $path = '/index.html'
-# $action = 'get'
-# $email = 'a@a.c'
-
 if  ARGV.length > 3
 	puts $host
 	puts $port
@@ -80,14 +74,14 @@ if  ARGV.length > 3
 	end
 
 	socket.print(request)
-	#response = socket.read              	# Read complete response
+	response = socket.read              	# Read complete response
 	#response = socket.recv( 100000 )
-	# response = socket.gets
-	# headers, body = response.split("\r\n\r\n", 2)
-	# print headers
-	# print "\n\n"
-	# print body                 	# And display it
-	puts "Foi\n"
+	#puts response
+	#response = socket.gets
+	headers, body = response.split("\r\n\r\n", 2)
+	puts headers
+	print "\n\n"
+	puts body                 	# And display it
 
 else
   print "Nope. Try again \n"
