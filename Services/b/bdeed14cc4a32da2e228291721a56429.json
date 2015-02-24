@@ -1,0 +1,19 @@
+{
+  "id": "bdeed14cc4a32da2e228291721a56429",
+  "first_name": "ricardo",
+  "last_name": "coutinho",
+  "email": "rbc@c.com",
+  "age": "25",
+  "gender": "m",
+  "password": "827ccb0eea8a706c4c34a16891f84e7b",
+  "telephone": "92283334",
+  "interests": [
+    "computador",
+    "faculdade",
+    "motos",
+    "programacao"
+  ],
+  "friends": [
+    "8c82cacaf9c1772e08a36b553f932fad"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "031bc5902d324bd611d18167888c0b85",
+  "first_name": "ricardo",
+  "last_name": "coutinho",
+  "email": "rbc@ufu.br",
+  "age": "25",
+  "gender": "m",
+  "password": "827ccb0eea8a706c4c34a16891f84e7b",
+  "telephone": "92272223",
+  "interests": [
+    [
+      "computador",
+      "rock"
+    ],
+    "carro"
+  ],
+  "friends": [
+
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "1fab1a93440e8d179df948b8aa09ec35",
+  "first_name": "luks",
+  "last_name": "gomes",
+  "email": "l@a.c",
+  "age": 19,
+  "gender": "M",
+  "password": "graveto123",
+  "telephone": "5432102954",
+  "interests": [
+    "mulheres",
+    "games",
+    "broca"
+  ],
+  "friends": [
+
+  ]
+}

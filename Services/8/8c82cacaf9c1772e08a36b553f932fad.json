@@ -1,0 +1,18 @@
+{
+  "id": "8c82cacaf9c1772e08a36b553f932fad",
+  "first_name": "wander",
+  "last_name": "gomes",
+  "email": "w@a.c",
+  "age": 20,
+  "gender": "M",
+  "password": "123graveto",
+  "telephone": "3432102954",
+  "interests": [
+    "mulheres",
+    "corrida"
+  ],
+  "friends": [
+    "d855f08e9b9af1509bc84ff3cddf31c2",
+    "1fab1a93440e8d179df948b8aa09ec35"
+  ]
+}

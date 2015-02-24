@@ -1,0 +1,18 @@
+{
+  "id": "b525787d4363afd7cff72b4b71e196be",
+  "first_name": "lasaro",
+  "last_name": "camargos",
+  "email": "lc@ufu.br",
+  "age": "10",
+  "gender": "m",
+  "password": "2c515233745b7e6b7cc718e48f4d06b5",
+  "telephone": "99887766",
+  "interests": [
+    [
+      "computadores"
+    ]
+  ],
+  "friends": [
+
+  ]
+}
