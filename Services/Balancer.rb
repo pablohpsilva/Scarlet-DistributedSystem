@@ -10,7 +10,6 @@ load '../Services/DatabaseManager.rb'
 remote_host = 'localhost'
 $port = ARGV[0]
 #$port = 8889
-puts $port
 threads = []
 # max_threads = 5
 database_manager = DatabaseManager.new
@@ -29,27 +28,19 @@ server = TCPServer.new(nil, $port)
           request = client.recv( 1000 )
           puts Thread.current
           if !request.eql?('')
-            puts "request = "+request
             r = request.split
             values = CGI.parse(r[1]).values
-            puts "Values = #{values}"
             remote = database_manager.find_user_data( Digest::MD5.hexdigest(values[0][0]) )
             remote_host = remote[0]
             remote_port = remote[1]
             port = $port
-            puts port
-            puts remote_port
-            puts remote_port.to_s == port.to_s
             if remote_port.to_s == port.to_s
-              puts "If\n"
               @server_instance.start(client,request)
               client.puts request
             else
-              puts "Else\n"
               # @server_instance.start(client,request)
               # puts "Server_Instance #{@server_instance}"
               server_socket = TCPSocket.new(remote_host, remote_port)
-              puts "server_socket #{server_socket.to_s}"
               server_socket.puts request
             end
 
