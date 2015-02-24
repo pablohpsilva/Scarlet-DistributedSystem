@@ -4,29 +4,60 @@ scarlet
 A server in ruby.
 
 ## How to use
+Balancer:
 ```sh
-  $ ruby server.rb {[[conf2.json],[folder_with_html,port]]}
+  $ ruby Balancer.rb
 ```
-Example:
-```sh
-  $ ruby server.rb conf2.json
-```
-Or
-```sh
-  $ ruby server.rb "./public" 8888
-```
-Cliente
 
+Server:
 ```sh
-  $ ruby client.rb "host" port "path" "arq" action value data
+  $ ruby server_test_functionality.rb "host" port
+```
+
+Client:
+
+POST request
+```sh
+  $ ruby client.rb "host" port "path" action first_name last_name email age gender password telephone interests
 ```
 Example:
 ```sh
-  $ ruby client.rb "localhost" 8888 "/index.html" "/Stack.rb" create Stack
+  $ ruby client.rb "localhost" 8888 "/index.html" post usuario user usuario@ufu.br 21 M MD5(123456) 88765432 "Computador,Programacao"
 ```
-or
+
+GET request
 ```sh
-  $ ruby client.rb "localhost" 8888 "/index.html" "/Stack.rb" push Stack Test
+  $ ruby client.rb "host" port "path" action value
+```
+Example:
+```sh
+  $ ruby client.rb "localhost" 8888 "/index.html" get usuario@ufu.br
+```
+
+PUT request
+```sh
+  $ ruby client.rb "host" port "path" action email column value
+```
+Example:
+```sh
+  $ ruby client.rb "localhost" 8888 "/index.html" put usuario@ufu.br friends usuario2@ufu.br
+```
+OR
+```sh
+  $ ruby client.rb "localhost" 8888 "/index.html" put usuario@ufu.br interests "Skate"
+```
+
+DELETE request
+```sh
+  $ ruby client.rb "host" port "path" action email column value
+```
+Example:
+```sh
+  $ ruby client.rb "localhost" 8888 "/index.html" delete usuario@ufu.br friends usuario2@ufu.br
+```
+OR
+```sh
+  $ ruby client.rb "localhost" 8888 "/index.html" delete usuario@ufu.br interests "Skate"
 ```
 
 ## IDE and basic configurations
