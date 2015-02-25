@@ -4,16 +4,17 @@ require 'uri'
 require 'securerandom'
 require 'digest'
 require 'timeout'
-load '../Kernel/Server.class.rb'
-load '../Services/DatabaseManager.rb'
+load '../yora/lib/yora.rb'
 
 remote_host = 'localhost'
 $port = ARGV[0]
+@node_ports = ARGV[1].split(',')
 #$port = 8889
 threads = []
 # max_threads = 5
-database_manager = DatabaseManager.new
-@server_instance = Server.new($port)
+# database_manager = DatabaseManager.new
+# @server_instance = Server.new($port)
+@random = Random.new
 
 puts 'starting server'
 server = TCPServer.new(nil, $port)
@@ -27,54 +28,27 @@ server = TCPServer.new(nil, $port)
         begin
           request = client.recv( 1000 )
           puts Thread.current
+          port_chosen = @random.rand(0..@node_ports.length)
+          puts port_chosen
+          port_in_use = @node_ports[port_chosen]
+          node_aux = ['127.0.0.1:', port_in_use].join
+          node = [node_aux]
+
+          client = Yora::Client.new(node)
+          puts client.inspect
           if !request.eql?('')
             r = request.split
-            values = CGI.parse(r[1]).values
-            remote = database_manager.find_user_data( Digest::MD5.hexdigest(values[0][0]) )
-            remote_host = remote[0]
-            remote_port = remote[1]
-            port = $port
-            if remote_port.to_s == port.to_s
-              @server_instance.start(client,request)
-              client.puts request
+            data = r[1].sub('/','').sub('?',' ')
+            puts data
+            response = ''
+            if data.include? 'set'
+              response = client.command(data)
+            elsif data.include? 'get'
+              response = client.query(data)
             else
-              # @server_instance.start(client,request)
-              # puts "Server_Instance #{@server_instance}"
-              server_socket = TCPSocket.new(remote_host, remote_port)
-              server_socket.puts request
+              throw StandardError
             end
-
-          else
-            puts Thread.current
-            Thread.kill(Thread.current)
-          end
-        rescue Errno::ECONNREFUSED
-          client.close
-          raise
-        end
-        puts "#{Thread.current}: connected to server at #{remote_host}:#{remote_port}"
-
-        while true
-          # Wait for data to be available on either socket.
-          (ready_sockets, dummy, dummy) = IO.select([client, server_socket])
-          begin
-            ready_sockets.each do |socket|
-              data = socket.readpartial(10000)
-              puts "socket = #{socket}\n\nclient = #{client}\n\n"
-              if socket == client
-                # Read from client, write to server.
-                puts "#{Thread.current}: client->server #{data.inspect}"
-                server_socket.write data
-                server_socket.flush
-              else
-                # Read from server, write to client.
-                puts "#{Thread.current}: server->client #{data.inspect}"
-                client.write data
-                client.flush
-              end
-            end
-          rescue EOFError
-            break
+            puts response
           end
         end
       rescue StandardError => e
