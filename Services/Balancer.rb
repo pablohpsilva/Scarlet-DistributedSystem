@@ -28,9 +28,18 @@ server = TCPServer.new(nil, $port)
         begin
           request = client.recv( 1000 )
           puts Thread.current
-          port_chosen = @random.rand(0..@node_ports.length)
+          port_chosen = @random.rand(0..(@node_ports.length-1))
+          puts
+          puts
           puts port_chosen
+          puts
+          puts
           port_in_use = @node_ports[port_chosen]
+          puts
+          puts
+          puts port_in_use
+          puts
+          puts
           node_aux = ['127.0.0.1:', port_in_use].join
           node = [node_aux]
 
@@ -48,7 +57,7 @@ server = TCPServer.new(nil, $port)
             else
               throw StandardError
             end
-            puts response
+            puts "RESPOSTA #{response}"
           end
         end
       rescue StandardError => e
